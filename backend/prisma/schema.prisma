@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SYSTEM_ADMIN
+  ADMIN
+  TECHNICIAN
+  REPORTER
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum UserStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum RoomType {
+  THEORY
+  COMPUTER_LAB
+  LAB
+}
+
+enum RoomStatus {
+  ACTIVE
+  MAINTENANCE
+}
+
+enum DeviceType {
+  PROJECTOR
+  TV
+  AIR_CONDITIONER
+  COMPUTER
+  SPEAKER
+  TABLE_CHAIR
+  OTHER
+}
+
+enum DeviceStatus {
+  GOOD
+  BROKEN
+  REPAIRING
+}
+
+enum ReportStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum NotificationType {
+  DAMAGE_REPORT
+  ADMIN_ANNOUNCEMENT
+  REPAIR_UPDATE
+}
+
+model Organization {
+  id            Int                @id @default(autoincrement())
+  name          String
+  slug          String             @unique
+  address       String?
+  phone         String?
+  email         String?
+  status        OrganizationStatus @default(ACTIVE)
+  users         User[]
+  rooms         Room[]
+  devices       Device[]
+  damageReports DamageReport[]
+  repairLogs    RepairLog[]
+  notifications Notification[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model User {
+  id                Int            @id @default(autoincrement())
+  organizationId    Int?
+  fullName          String
+  username          String
+  email             String?
+  birthYear         Int?
+  address           String?
+  phone             String?
+  passwordHash      String
+  role              Role
+  status            UserStatus     @default(ACTIVE)
+  failedLoginCount  Int            @default(0)
+  lockedUntil       DateTime?
+  organization      Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  damageReports     DamageReport[]
+  repairLogs        RepairLog[]
+  notifications     Notification[] @relation("RecipientNotifications")
+  sentNotifications Notification[] @relation("ActorNotifications")
+  createdAt         DateTime       @default(now())
+
+  @@unique([organizationId, username])
+  @@index([organizationId, role])
+  @@index([organizationId, status])
+  @@index([role])
+}
+
+model Room {
+  id             Int            @id @default(autoincrement())
+  organizationId Int
+  code           String
+  type           RoomType
+  capacity       Int
+  status         RoomStatus     @default(ACTIVE)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  devices        Device[]
+  damageReports  DamageReport[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([organizationId, code])
+  @@index([organizationId, status])
+  @@index([organizationId, type])
+  @@index([organizationId, createdAt])
+}
+
+model Device {
+  id                Int                  @id @default(autoincrement())
+  organizationId    Int
+  code              String
+  name              String
+  type              DeviceType
+  status            DeviceStatus         @default(GOOD)
+  importedAt        DateTime             @default(now())
+  roomId            Int
+  organization      Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  room              Room                 @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  damageReportItems DamageReportDevice[]
+  repairLogs        RepairLog[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@unique([organizationId, code])
+  @@index([organizationId, roomId])
+  @@index([organizationId, status])
+  @@index([organizationId, type])
+  @@index([organizationId, importedAt])
+}
+
+model DamageReport {
+  id             Int                  @id @default(autoincrement())
+  organizationId Int
+  reporterId     Int
+  roomId         Int
+  description    String
+  status         ReportStatus         @default(PENDING)
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reporter       User                 @relation(fields: [reporterId], references: [id], onDelete: Restrict)
+  room           Room                 @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  devices        DamageReportDevice[]
+  repairLogs     RepairLog[]
+  notifications  Notification[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, createdAt])
+  @@index([organizationId, roomId])
+  @@index([organizationId, reporterId])
+}
+
+model DamageReportDevice {
+  reportId Int
+  deviceId Int
+  report   DamageReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  device   Device       @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+
+  @@id([reportId, deviceId])
+  @@index([deviceId, reportId])
+}
+
+model RepairLog {
+  id             Int           @id @default(autoincrement())
+  organizationId Int
+  deviceId       Int
+  reportId       Int?
+  technicianId   Int
+  quantity       Int           @default(1)
+  repairedAt     DateTime
+  content        String
+  afterStatus    DeviceStatus
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  device         Device        @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+  report         DamageReport? @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  technician     User          @relation(fields: [technicianId], references: [id], onDelete: Restrict)
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, deviceId])
+  @@index([organizationId, reportId])
+  @@index([organizationId, technicianId])
+  @@index([organizationId, repairedAt])
+}
+
+model Notification {
+  id             Int              @id @default(autoincrement())
+  organizationId Int
+  type           NotificationType
+  title          String
+  message        String
+  isRead         Boolean          @default(false)
+  recipientId    Int?
+  actorId        Int?
+  reportId       Int?
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  recipient      User?            @relation("RecipientNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor          User?            @relation("ActorNotifications", fields: [actorId], references: [id], onDelete: SetNull)
+  report         DamageReport?    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([organizationId, recipientId])
+  @@index([recipientId, isRead])
+  @@index([recipientId, createdAt])
+  @@index([organizationId, type])
+  @@index([organizationId, reportId])
+}

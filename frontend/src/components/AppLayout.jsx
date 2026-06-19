@@ -126,7 +126,6 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
           </section>
 
           <button type="button" className="sidebar-logout-button" onClick={logout}>
-            <span>Exit</span>
             Đăng xuất
           </button>
         </div>

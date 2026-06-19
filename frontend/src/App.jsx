@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: khai bao route va cau truc man hinh chinh.
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicHomePage from "./pages/PublicHomePage";

@@ -1,3 +1,5 @@
+-- Nguoi code: Phạm Anh Tuấn. Pham vi: migration phong hoc.
+
 -- CreateEnum
 CREATE TYPE "RoomType" AS ENUM ('THEORY', 'COMPUTER_LAB', 'LAB');
 

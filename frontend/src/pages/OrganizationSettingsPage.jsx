@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: cau hinh thong tin to chuc.
+
 import { useEffect, useMemo, useState } from "react";
 import AppLayout from "../components/AppLayout";
 import api from "../api";

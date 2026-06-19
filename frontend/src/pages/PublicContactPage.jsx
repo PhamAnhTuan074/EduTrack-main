@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: trang lien he public.
+
 import { useState } from "react";
 import PublicShell from "../components/PublicShell";
 

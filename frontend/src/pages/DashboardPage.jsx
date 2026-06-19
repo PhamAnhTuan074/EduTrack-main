@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: dashboard thong ke tong quan.
+
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
 import AppLayout from "../components/AppLayout";

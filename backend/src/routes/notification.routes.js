@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: thong bao cho cac luong bao hong va sua chua.
+
 const express = require("express");
 const prisma = require("../prisma");
 const { authenticate, authorize } = require("../middlewares/auth.middleware");

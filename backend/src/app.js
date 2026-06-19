@@ -1,4 +1,6 @@
-﻿const express = require("express");
+﻿// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: cau hinh Express, middleware va route goc dung chung.
+
+const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const authRouter = require("./routes/auth.routes");

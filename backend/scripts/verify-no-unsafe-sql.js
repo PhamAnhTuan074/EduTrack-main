@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: kiem tra an toan truy van SQL truoc khi push.
+
 const fs = require("fs");
 const path = require("path");
 

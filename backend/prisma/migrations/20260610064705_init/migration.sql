@@ -1,3 +1,5 @@
+-- Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: migration khoi tao du lieu nen.
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'TECHNICIAN', 'REPORTER');
 

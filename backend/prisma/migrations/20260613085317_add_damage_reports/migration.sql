@@ -1,3 +1,5 @@
+-- Nguoi code: Nguyễn Ngọc Phương. Pham vi: migration phieu bao hong.
+
 -- CreateEnum
 CREATE TYPE "ReportStatus" AS ENUM ('PENDING', 'IN_PROGRESS', 'COMPLETED');
 

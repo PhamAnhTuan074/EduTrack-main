@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: tao va xu ly phieu bao hong.
+
 const express = require("express");
 const prisma = require("../prisma");
 const { authenticate, authorize } = require("../middlewares/auth.middleware");

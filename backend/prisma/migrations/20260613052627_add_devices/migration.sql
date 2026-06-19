@@ -1,3 +1,5 @@
+-- Nguoi code: Nguyễn Ngọc Phương. Pham vi: migration thiet bi.
+
 -- CreateEnum
 CREATE TYPE "DeviceType" AS ENUM ('PROJECTOR', 'TV', 'AIR_CONDITIONER', 'COMPUTER', 'SPEAKER', 'TABLE_CHAIR', 'OTHER');
 

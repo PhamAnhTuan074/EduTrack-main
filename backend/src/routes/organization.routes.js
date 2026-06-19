@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: quan ly thong tin to chuc.
+
 const express = require("express");
 const prisma = require("../prisma");
 const { authenticate, authorize } = require("../middlewares/auth.middleware");

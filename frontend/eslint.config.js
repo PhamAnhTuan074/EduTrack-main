@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: cau hinh ESLint dung chung cho frontend.
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

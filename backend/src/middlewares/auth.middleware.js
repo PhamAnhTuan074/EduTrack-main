@@ -1,4 +1,6 @@
-﻿const jwt = require("jsonwebtoken");
+﻿// Nguoi code: Phạm Anh Tuấn. Pham vi: xac thuc JWT va phan quyen API.
+
+const jwt = require("jsonwebtoken");
 
 function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;

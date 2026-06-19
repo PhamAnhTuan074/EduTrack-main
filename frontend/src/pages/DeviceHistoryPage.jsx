@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: lich su thiet bi.
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../api";

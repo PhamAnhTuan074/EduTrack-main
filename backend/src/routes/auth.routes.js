@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: dang nhap, dang ky to chuc va xac thuc nguoi dung.
+
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

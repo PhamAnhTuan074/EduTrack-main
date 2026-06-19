@@ -1,3 +1,5 @@
+# Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: image Docker build va phuc vu frontend.
+
 FROM node:20-alpine AS build
 
 WORKDIR /app

@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: ghi nhan lich su sua chua thiet bi.
+
 const express = require("express");
 const prisma = require("../prisma");
 const { authenticate, authorize } = require("../middlewares/auth.middleware");

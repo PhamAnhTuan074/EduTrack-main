@@ -1,3 +1,5 @@
+-- Nguoi code: Nguyễn Ngọc Phương. Pham vi: migration index toi uu truy van danh sach va bao cao.
+
 -- Add indexes for common multi-tenant filters, sorting, and relationship lookups.
 CREATE INDEX "Organization_status_idx" ON "Organization"("status");
 CREATE INDEX "Organization_createdAt_idx" ON "Organization"("createdAt");

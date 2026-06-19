@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: du lieu mau nen cho cac module dung chung.
+
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 

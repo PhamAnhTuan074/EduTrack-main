@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: du lieu demo mo rong cho tai khoan, phong, thiet bi, bao hong va bao cao.
+
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 

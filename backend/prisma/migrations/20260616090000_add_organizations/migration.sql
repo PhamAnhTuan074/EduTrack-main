@@ -1,3 +1,5 @@
+-- Nguoi code: Phạm Anh Tuấn. Pham vi: migration to chuc.
+
 -- CreateEnum
 CREATE TYPE "OrganizationStatus" AS ENUM ('ACTIVE', 'LOCKED');
 

@@ -1,3 +1,5 @@
+/* Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: style tong cho public pages, dashboard va cac module quan tri. */
+
 :root {
   --brand: #b0002a;
   --brand-dark: #8f0021;
@@ -2618,7 +2620,7 @@ button,
 }
 
 .admin-dark-app .admin-sidebar {
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   border-right: 1px solid #e5e7eb !important;
   box-shadow: 8px 0 28px rgba(16, 24, 40, 0.05) !important;
 }
@@ -2639,7 +2641,7 @@ button,
 }
 
 .admin-dark-app .brand-icon {
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -2677,7 +2679,7 @@ button,
 
 .admin-dark-app .sidebar-user-card {
   border-color: #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: 0 2px 10px rgba(16, 24, 40, 0.06) !important;
 }
 
@@ -2702,7 +2704,7 @@ button,
 .admin-dark-app .sidebar-logout-button {
   border-color: #d7dde8 !important;
   color: #202939 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
 }
 
 .admin-dark-app .sidebar-logout-button:hover {
@@ -2716,14 +2718,14 @@ button,
 }
 
 .admin-topbar {
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   border-bottom: 1px solid #e5e7eb !important;
 }
 
 .admin-topbar .notification-bell-button {
   border-color: #ffb3c1 !important;
   color: #b0002a !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: 0 8px 24px rgba(176, 0, 42, 0.12) !important;
 }
 
@@ -2745,7 +2747,7 @@ button,
 .admin-modal,
 .empty-panel {
   border: 1px solid #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04) !important;
 }
 
@@ -2755,7 +2757,7 @@ button,
 .admin-search-box input {
   border-color: #cfd6e4 !important;
   color: #111827 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
 }
 
 .admin-search-box input {
@@ -2782,7 +2784,7 @@ button,
 .filter-pills button {
   border-color: #e5e7eb !important;
   color: #475467 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
 }
 
 .filter-pills button.active,
@@ -2795,7 +2797,7 @@ button,
 .notification-tabs button {
   border: 1px solid #e5e7eb !important;
   color: #475467 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -2820,7 +2822,7 @@ button,
 .notification-filter-pills button {
   border: 1px solid #e5e7eb !important;
   color: #475467 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -2843,7 +2845,7 @@ button,
 
 .admin-dark-app .notification-page .notification-list .notification-item button.notification-content {
   color: inherit !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -2864,27 +2866,27 @@ button,
 
 .notification-detail-header button {
   color: #475467 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
 .report-detail-header button {
   color: #475467 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
 .notification-detail-actions .secondary-button {
   color: #475467 !important;
   border: 1px solid #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
 .report-detail-actions .secondary-button {
   color: #475467 !important;
   border: 1px solid #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -2933,7 +2935,7 @@ button,
 
 .admin-data-table td {
   border-bottom-color: #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   color: #111827 !important;
 }
 
@@ -3008,13 +3010,13 @@ button,
 }
 
 .table-actions select {
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
 }
 
 .action-menu-trigger {
   border-color: #e5e7eb !important;
   color: #111827 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
 }
 
 .action-menu.is-open .action-menu-trigger {
@@ -3025,7 +3027,7 @@ button,
 .admin-dark-app .action-menu-list button:not(.danger-button) {
   color: #344054 !important;
   border: 1px solid #edf0f5 !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: none !important;
 }
 
@@ -3142,7 +3144,7 @@ button,
 .admin-dark-app .repair-form-panel,
 .admin-dark-app .repair-summary-panel {
   border-color: #e5e7eb !important;
-  background: #ffffff !important;
+  background: #f1f5f9 !important;
   box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04) !important;
 }
 

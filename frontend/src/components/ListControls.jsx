@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: bo loc, tim kiem va sap xep danh sach.
+
 export default function ListControls({
   meta,
   sortBy,

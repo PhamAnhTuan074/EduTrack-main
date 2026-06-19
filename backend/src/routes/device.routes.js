@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: quan ly thiet bi va trang thai thiet bi.
+
 const express = require("express");
 const prisma = require("../prisma");
 const { authenticate, authorize } = require("../middlewares/auth.middleware");

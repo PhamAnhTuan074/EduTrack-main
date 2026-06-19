@@ -4,6 +4,15 @@ EduTrack is a multi-school facility management platform for schools, academies, 
 
 Each organization has its own isolated data space for rooms, devices, damage reports, repair logs, notifications, dashboard reports, and users.
 
+## Team Contribution Plan
+
+Project contributors:
+
+- Phạm Anh Tuấn
+- Nguyễn Ngọc Phương
+
+The work is split evenly by full-stack modules so both members own backend, frontend, database/seed, testing, and documentation tasks. See [docs/TEAM_ASSIGNMENT.md](docs/TEAM_ASSIGNMENT.md) for the detailed file-level responsibility map.
+
 ## Main Features
 
 - Organization registration with the first admin account.

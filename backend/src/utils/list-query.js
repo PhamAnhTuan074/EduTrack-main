@@ -1,3 +1,5 @@
+// Nguoi code: Nguyễn Ngọc Phương. Pham vi: xu ly phan trang, tim kiem, loc va sap xep danh sach.
+
 function parsePagination(query) {
   const page = Math.max(Number(query.page || 1), 1);
   const limit = Math.min(Math.max(Number(query.limit || 10), 1), 100);

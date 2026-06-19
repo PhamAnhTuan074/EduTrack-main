@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: layout quan tri, dieu huong va hien thi thong tin nguoi dung.
+
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api";

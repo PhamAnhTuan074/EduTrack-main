@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and generated artifacts
+*.log
+logs/
+output/
+
+# Local tool state
+.vercel/
+frontend/.vercel/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# OS files
+.DS_Store
+Thumbs.db

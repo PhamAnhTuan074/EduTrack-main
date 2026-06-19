@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: quan ly nguoi dung va vai tro trong to chuc.
+
 const express = require("express");
 const bcrypt = require("bcrypt");
 const prisma = require("../prisma");

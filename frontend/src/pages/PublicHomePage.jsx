@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: trang gioi thieu public cua EduTrack.
+
 import { Link } from "react-router-dom";
 import PublicShell from "../components/PublicShell";
 import heroImage from "../assets/hero.png";

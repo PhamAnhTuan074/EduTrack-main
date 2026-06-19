@@ -1,3 +1,5 @@
+-- Nguoi code: Nguyễn Ngọc Phương. Pham vi: migration thong bao.
+
 -- CreateEnum
 CREATE TYPE "NotificationType" AS ENUM ('DAMAGE_REPORT', 'ADMIN_ANNOUNCEMENT', 'REPAIR_UPDATE');
 

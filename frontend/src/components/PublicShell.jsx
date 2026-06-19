@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: layout cho cac trang public.
+
 import { Link } from "react-router-dom";
 
 const navItems = [

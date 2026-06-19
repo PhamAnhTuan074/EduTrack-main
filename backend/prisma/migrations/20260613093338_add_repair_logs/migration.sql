@@ -1,3 +1,5 @@
+-- Nguoi code: Nguyễn Ngọc Phương. Pham vi: migration lich su sua chua.
+
 -- CreateTable
 CREATE TABLE "RepairLog" (
     "id" SERIAL NOT NULL,

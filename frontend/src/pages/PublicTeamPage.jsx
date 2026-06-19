@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: trang gioi thieu doi ngu.
+
 import PublicShell from "../components/PublicShell";
 
 const teams = [

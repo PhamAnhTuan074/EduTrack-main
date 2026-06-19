@@ -1,3 +1,5 @@
+// Nguoi code: Phạm Anh Tuấn. Pham vi: dang ky to chuc va tai khoan admin dau tien.
+
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../api";

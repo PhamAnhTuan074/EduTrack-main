@@ -23,7 +23,7 @@ services:
           name: edutrack-main-phamanhtuan074-db
           property: connectionString
       - key: CORS_ORIGINS
-        value: https://frontend-lilac-eight-75.vercel.app
+        value: https://edu-track-csvc.vercel.app
 
 databases:
   - name: edutrack-main-phamanhtuan074-db

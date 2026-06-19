@@ -3734,3 +3734,98 @@ button,
   border-color: #d0d5dd !important;
   background: #ffffff !important;
 }
+
+/* Polished sidebar with real icons. */
+.admin-dark-app .admin-sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #e5e7eb !important;
+  box-shadow: 10px 0 30px rgba(16, 24, 40, 0.06) !important;
+  padding: 0 12px 14px !important;
+}
+
+.admin-dark-app .admin-brand {
+  margin: 0 -12px 16px !important;
+  min-height: 74px !important;
+  background: linear-gradient(135deg, #a80022 0%, #c70031 100%) !important;
+}
+
+.admin-dark-app .sidebar-organization-card,
+.admin-dark-app .sidebar-user-card {
+  border-color: #e5e7eb !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
+}
+
+.admin-dark-app .sidebar-organization-card span,
+.admin-dark-app .sidebar-organization-card em,
+.admin-dark-app .nav-group-title,
+.admin-dark-app .user-info span {
+  color: #667085 !important;
+}
+
+.admin-dark-app .sidebar-organization-card strong,
+.admin-dark-app .user-info p {
+  color: #111827 !important;
+}
+
+.admin-dark-app .sidebar-nav {
+  gap: 7px !important;
+}
+
+.admin-dark-app .sidebar-link {
+  min-height: 44px !important;
+  gap: 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: #344054 !important;
+  background: transparent !important;
+  padding: 9px 10px !important;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.16s ease !important;
+}
+
+.admin-dark-app .sidebar-link em {
+  color: inherit !important;
+  font-size: 13px !important;
+  font-style: normal !important;
+  font-weight: 650 !important;
+}
+
+.admin-dark-app .sidebar-link-icon {
+  display: grid !important;
+  place-items: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+  border-radius: 8px !important;
+  color: #667085 !important;
+  background: #f1f5f9 !important;
+}
+
+.admin-dark-app .sidebar-link.active,
+.admin-dark-app .sidebar-link:hover {
+  color: #b0002a !important;
+  border-color: #f3b7c4 !important;
+  background: #fff1f4 !important;
+  transform: translateX(2px);
+}
+
+.admin-dark-app .sidebar-link.active .sidebar-link-icon,
+.admin-dark-app .sidebar-link:hover .sidebar-link-icon {
+  color: #ffffff !important;
+  background: #b0002a !important;
+}
+
+.admin-dark-app .sidebar-logout-button {
+  justify-content: center !important;
+  gap: 8px !important;
+  height: 40px !important;
+  border-color: #e5e7eb !important;
+  color: #344054 !important;
+  background: #ffffff !important;
+}
+
+.admin-dark-app .sidebar-logout-button:hover {
+  color: #b0002a !important;
+  border-color: #f3b7c4 !important;
+  background: #fff1f4 !important;
+}

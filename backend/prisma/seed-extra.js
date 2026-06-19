@@ -1,4 +1,4 @@
-// Nguoi code: Phạm Anh Tuấn va Nguyễn Ngọc Phương. Pham vi: du lieu demo mo rong cho tai khoan, phong, thiet bi, bao hong va bao cao.
+﻿// Nguoi code: Phạm Anh Tuấn và Nguyễn Ngọc Phương. Pham vi: du lieu demo mo rong cho tại khoan, phong, thiết bị, bao hong và bao cao.
 
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
@@ -125,22 +125,33 @@ async function ensureDevice(organizationId, data) {
 }
 
 async function ensureDamageReport({ organizationId, reporterId, roomId, description, status, deviceIds }) {
-  const existing = await prisma.damageReport.findFirst({
+  const candidates = await prisma.damageReport.findMany({
     where: {
       organizationId,
       reporterId,
       roomId,
-      description
+      devices: {
+        some: {
+          deviceId: {
+            in: deviceIds
+          }
+        }
+      }
     },
     include: {
       devices: true
     }
   });
+  const expectedDeviceIds = [...deviceIds].sort((a, b) => a - b).join(",");
+  const existing = candidates.find((candidate) => {
+    const currentDeviceIds = candidate.devices.map((item) => item.deviceId).sort((a, b) => a - b).join(",");
+    return currentDeviceIds === expectedDeviceIds;
+  });
 
   const report = existing
     ? await prisma.damageReport.update({
         where: { id: existing.id },
-        data: { status },
+        data: { description, status },
         include: { devices: true }
       })
     : await prisma.damageReport.create({
@@ -190,7 +201,7 @@ async function ensureRepairLog(data) {
       organizationId: data.organizationId,
       deviceId: data.deviceId,
       technicianId: data.technicianId,
-      content: data.content
+      repairedAt
     }
   });
 
@@ -228,13 +239,19 @@ async function ensureRepairLog(data) {
 }
 
 async function ensureNotification(data) {
-  const existing = await prisma.notification.findFirst({
-    where: {
-      organizationId: data.organizationId,
-      title: data.title,
-      recipientId: data.recipientId || null
-    }
-  });
+  const notificationKey = data.reportId
+    ? {
+        organizationId: data.organizationId,
+        reportId: data.reportId,
+        recipientId: data.recipientId || null
+      }
+    : {
+        organizationId: data.organizationId,
+        type: data.type,
+        recipientId: data.recipientId || null,
+        actorId: data.actorId || null
+      };
+  const existing = await prisma.notification.findFirst({ where: notificationKey });
 
   const notificationData = clean({
     organizationId: data.organizationId,
@@ -266,7 +283,7 @@ async function addStandardClassroomDevices(organizationId, room, options = {}) {
   return {
     projector: await ensureDevice(organizationId, {
       code: `MC-${prefix}-01`,
-      name: names.projector || `May chieu ${room.code}`,
+      name: names.projector || `Máy chiếu ${room.code}`,
       type: "PROJECTOR",
       status: statuses.projector || "GOOD",
       importedAt,
@@ -282,7 +299,7 @@ async function addStandardClassroomDevices(organizationId, room, options = {}) {
     }),
     airConditioner: await ensureDevice(organizationId, {
       code: `AC-${prefix}-01`,
-      name: names.airConditioner || `Dieu hoa ${room.code}`,
+      name: names.airConditioner || `Điều hòa ${room.code}`,
       type: "AIR_CONDITIONER",
       status: statuses.airConditioner || "GOOD",
       importedAt,
@@ -298,7 +315,7 @@ async function addStandardClassroomDevices(organizationId, room, options = {}) {
     }),
     furniture: await ensureDevice(organizationId, {
       code: `BC-${prefix}-01`,
-      name: names.furniture || `Bo ban ghe ${room.code}`,
+      name: names.furniture || `Bộ bàn ghế ${room.code}`,
       type: "TABLE_CHAIR",
       status: statuses.furniture || "GOOD",
       importedAt,
@@ -319,7 +336,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
 
   devices.projector = await ensureDevice(organizationId, {
     code: `MC-${prefix}-01`,
-    name: `May chieu phong ${room.code}`,
+    name: `Máy chiếu phòng ${room.code}`,
     type: "PROJECTOR",
     status: options.projectorStatus || "GOOD",
     importedAt,
@@ -327,7 +344,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
   });
   devices.airConditioner = await ensureDevice(organizationId, {
     code: `AC-${prefix}-01`,
-    name: `Dieu hoa phong ${room.code}`,
+    name: `Điều hòa phòng ${room.code}`,
     type: "AIR_CONDITIONER",
     status: options.airConditionerStatus || "GOOD",
     importedAt,
@@ -335,7 +352,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
   });
   devices.speaker = await ensureDevice(organizationId, {
     code: `SP-${prefix}-01`,
-    name: `Loa phong ${room.code}`,
+    name: `Loa phòng ${room.code}`,
     type: "SPEAKER",
     status: options.speakerStatus || "GOOD",
     importedAt,
@@ -343,7 +360,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
   });
   devices.switch = await ensureDevice(organizationId, {
     code: `SW-${prefix}-01`,
-    name: `Switch mang ${room.code}`,
+    name: `Switch mạng ${room.code}`,
     type: "OTHER",
     status: options.switchStatus || "GOOD",
     importedAt,
@@ -355,7 +372,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
     const status = brokenComputers.has(index) ? "BROKEN" : repairingComputers.has(index) ? "REPAIRING" : "GOOD";
     const computer = await ensureDevice(organizationId, {
       code: `PC-${prefix}-${codeNumber}`,
-      name: index === 1 ? `May tinh giang vien ${room.code}` : `May tinh sinh vien ${room.code}-${codeNumber}`,
+      name: index === 1 ? `Máy tính giảng viên ${room.code}` : `Máy tính sinh viên ${room.code}-${codeNumber}`,
       type: "COMPUTER",
       status,
       importedAt,
@@ -369,111 +386,111 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
 
 async function seedPtit(passwordHash) {
   const organization = await ensureOrganization({
-    name: "Hoc vien Cong nghe Buu chinh Vien thong",
+    name: "Học viện Công nghệ Bưu chính Viễn thông",
     slug: "ptit",
-    address: "Km10 Nguyen Trai, Ha Dong, Ha Noi",
+    address: "Km10 Nguyễn Trãi, Hà Đông, Hà Nội",
     phone: "02433528122",
     email: "cosovatchat@ptit.edu.vn"
   });
 
   const users = {
     admin: await ensureUser(organization.id, {
-      fullName: "Quan tri vien CSVC",
+      fullName: "Quản trị viên CSVC",
       username: "admin",
       role: "ADMIN",
       email: "admin@ptit.edu.vn",
       birthYear: 1988,
-      address: "Ha Noi",
+      address: "Hà Nội",
       phone: "0900000001"
     }, passwordHash),
     admin2: await ensureUser(organization.id, {
-      fullName: "Pham Thu Ha",
+      fullName: "Phạm Thu Hà",
       username: "admin_csht",
       role: "ADMIN",
       email: "admin.csht@ptit.edu.vn",
       birthYear: 1990,
-      address: "Ha Dong, Ha Noi",
+      address: "Hà Đông, Hà Nội",
       phone: "0900000010"
     }, passwordHash),
     tech: await ensureUser(organization.id, {
-      fullName: "Nguyen Van Nam",
+      fullName: "Nguyễn Văn Nam",
       username: "tech",
       role: "TECHNICIAN",
       email: "tech@ptit.edu.vn",
       birthYear: 1993,
-      address: "Ha Noi",
+      address: "Hà Nội",
       phone: "0900000002"
     }, passwordHash),
     techDien: await ensureUser(organization.id, {
-      fullName: "Tran Duc Minh",
+      fullName: "Trần Đức Minh",
       username: "tech_dien",
       role: "TECHNICIAN",
       email: "tech.dien@ptit.edu.vn",
       birthYear: 1992,
-      address: "Thanh Xuan, Ha Noi",
+      address: "Thanh Xuân, Hà Nội",
       phone: "0900000011"
     }, passwordHash),
     techIt: await ensureUser(organization.id, {
-      fullName: "Do Quang Huy",
+      fullName: "Đỗ Quang Huy",
       username: "tech_it",
       role: "TECHNICIAN",
       email: "tech.it@ptit.edu.vn",
       birthYear: 1995,
-      address: "Cau Giay, Ha Noi",
+      address: "Cầu Giấy, Hà Nội",
       phone: "0900000012"
     }, passwordHash),
     reporter: await ensureUser(organization.id, {
-      fullName: "Le Minh Tuan",
+      fullName: "Lê Minh Tuấn",
       username: "reporter",
       role: "REPORTER",
       email: "reporter@ptit.edu.vn",
       birthYear: 1998,
-      address: "Ha Noi",
+      address: "Hà Nội",
       phone: "0900000003"
     }, passwordHash),
     gvMang: await ensureUser(organization.id, {
-      fullName: "Vu Thi Mai",
+      fullName: "Vũ Thị Mai",
       username: "gv_mang",
       role: "REPORTER",
       email: "gv.mang@ptit.edu.vn",
       birthYear: 1987,
-      address: "Ha Dong, Ha Noi",
+      address: "Hà Đông, Hà Nội",
       phone: "0900000013"
     }, passwordHash),
     gvHoa: await ensureUser(organization.id, {
-      fullName: "Nguyen Thi Lan",
+      fullName: "Nguyễn Thị Lan",
       username: "gv_hoa",
       role: "REPORTER",
       email: "gv.hoa@ptit.edu.vn",
       birthYear: 1985,
-      address: "Dong Da, Ha Noi",
+      address: "Đống Đa, Hà Nội",
       phone: "0900000014"
     }, passwordHash),
     gvVatLy: await ensureUser(organization.id, {
-      fullName: "Hoang Manh Cuong",
+      fullName: "Hoàng Mạnh Cường",
       username: "gv_vatly",
       role: "REPORTER",
       email: "gv.vatly@ptit.edu.vn",
       birthYear: 1984,
-      address: "Nam Tu Liem, Ha Noi",
+      address: "Nam Từ Liêm, Hà Nội",
       phone: "0900000015"
     }, passwordHash),
     gvKtpm: await ensureUser(organization.id, {
-      fullName: "Bui Anh Khoa",
+      fullName: "Bùi Anh Khoa",
       username: "gv_ktpm",
       role: "REPORTER",
       email: "gv.ktpm@ptit.edu.vn",
       birthYear: 1991,
-      address: "Bac Tu Liem, Ha Noi",
+      address: "Bắc Từ Liêm, Hà Nội",
       phone: "0900000016"
     }, passwordHash),
     thuVien: await ensureUser(organization.id, {
-      fullName: "Dang Ngoc Anh",
+      fullName: "Đặng Ngọc Anh",
       username: "thu_vien",
       role: "REPORTER",
       email: "thuvien@ptit.edu.vn",
       birthYear: 1994,
-      address: "Ha Dong, Ha Noi",
+      address: "Hà Đông, Hà Nội",
       phone: "0900000017"
     }, passwordHash)
   };
@@ -564,7 +581,7 @@ async function seedPtit(passwordHash) {
   devices["LAB-HOA"] = {
     hood: await ensureDevice(organization.id, {
       code: "HT-HOA-01",
-      name: "He thong hut khi LAB-HOA",
+      name: "Hệ thống hút khí LAB-HOA",
       type: "OTHER",
       status: "BROKEN",
       importedAt: at("2026-04-02"),
@@ -572,7 +589,7 @@ async function seedPtit(passwordHash) {
     }),
     kit: await ensureDevice(organization.id, {
       code: "TB-HOA-01",
-      name: "Bo dung cu thi nghiem hoa co ban",
+      name: "Bộ dụng cụ thí nghiệm hóa cơ bản",
       type: "OTHER",
       status: "GOOD",
       importedAt: at("2026-04-01"),
@@ -580,7 +597,7 @@ async function seedPtit(passwordHash) {
     }),
     furniture: await ensureDevice(organization.id, {
       code: "BC-HOA-01",
-      name: "Ban thi nghiem LAB-HOA",
+      name: "Bàn thí nghiệm LAB-HOA",
       type: "TABLE_CHAIR",
       status: "GOOD",
       importedAt: at("2026-04-02"),
@@ -591,7 +608,7 @@ async function seedPtit(passwordHash) {
   devices["LAB-LY"] = {
     electricityKit: await ensureDevice(organization.id, {
       code: "TB-LY-01",
-      name: "Bo thi nghiem dien hoc LAB-LY",
+      name: "Bộ thí nghiệm điện học LAB-LY",
       type: "OTHER",
       status: "GOOD",
       importedAt: at("2026-05-01"),
@@ -599,7 +616,7 @@ async function seedPtit(passwordHash) {
     }),
     projector: await ensureDevice(organization.id, {
       code: "MC-LY-01",
-      name: "May chieu phong LAB-LY",
+      name: "Máy chiếu phòng LAB-LY",
       type: "PROJECTOR",
       status: "GOOD",
       importedAt: at("2026-05-03"),
@@ -607,7 +624,7 @@ async function seedPtit(passwordHash) {
     }),
     airConditioner: await ensureDevice(organization.id, {
       code: "AC-LY-01",
-      name: "Dieu hoa LAB-LY",
+      name: "Điều hòa LAB-LY",
       type: "AIR_CONDITIONER",
       status: "GOOD",
       importedAt: at("2026-05-03"),
@@ -618,7 +635,7 @@ async function seedPtit(passwordHash) {
   devices["LAB-DT"] = {
     oscilloscope: await ensureDevice(organization.id, {
       code: "OSC-DT-01",
-      name: "May hien song LAB-DT",
+      name: "Máy hiện sóng LAB-DT",
       type: "OTHER",
       status: "GOOD",
       importedAt: at("2026-04-15"),
@@ -626,7 +643,7 @@ async function seedPtit(passwordHash) {
     }),
     solderingStation: await ensureDevice(organization.id, {
       code: "HAN-DT-01",
-      name: "Tram han linh kien LAB-DT",
+      name: "Trạm hàn linh kiện LAB-DT",
       type: "OTHER",
       status: "BROKEN",
       importedAt: at("2026-04-15"),
@@ -634,7 +651,7 @@ async function seedPtit(passwordHash) {
     }),
     projector: await ensureDevice(organization.id, {
       code: "MC-DT-01",
-      name: "May chieu LAB-DT",
+      name: "Máy chiếu LAB-DT",
       type: "PROJECTOR",
       status: "GOOD",
       importedAt: at("2026-04-16"),
@@ -647,7 +664,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P101.id,
-    description: "May chieu P101 khong len hinh khi bat dau tiet hoc.",
+    description: "Máy chiếu P101 không lên hình khi bắt đầu tiết học.",
     status: "PENDING",
     deviceIds: [devices.P101.projector.id]
   }));
@@ -655,7 +672,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P101.id,
-    description: "Tivi P101 hien soc ngang va khong nhan tin hieu HDMI.",
+    description: "Tivi P101 hiện sọc ngang và không nhận tín hiệu HDMI.",
     status: "PENDING",
     deviceIds: [devices.P101.tv.id]
   }));
@@ -663,7 +680,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P102.id,
-    description: "Dieu hoa P102 phat tieng on lon va lam mat yeu.",
+    description: "Điều hòa P102 phát tiếng ồn lớn và làm mát yếu.",
     status: "IN_PROGRESS",
     deviceIds: [devices.P102.airConditioner.id]
   });
@@ -672,7 +689,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvKtpm.id,
     roomId: rooms.LAB01.id,
-    description: "Loa LAB01 bi re khi mo am luong lon.",
+    description: "Loa LAB01 bị rè khi mở âm lượng lớn.",
     status: "COMPLETED",
     deviceIds: [devices.LAB01.speaker.id]
   });
@@ -681,7 +698,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvMang.id,
     roomId: rooms.P201.id,
-    description: "Dieu hoa P201 khong khoi dong, den bao loi nhap nhay.",
+    description: "Điều hòa P201 không khởi động, đèn báo lỗi nhấp nháy.",
     status: "PENDING",
     deviceIds: [devices.P201.airConditioner.id]
   }));
@@ -689,7 +706,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P202.id,
-    description: "May chieu P202 bi mo anh, can can chinh lai bong chieu.",
+    description: "Máy chiếu P202 bị mờ ảnh, cần cân chỉnh lại bóng chiếu.",
     status: "IN_PROGRESS",
     deviceIds: [devices.P202.projector.id]
   });
@@ -698,7 +715,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P202.id,
-    description: "Loa tro giang P202 mat ket noi bluetooth lien tuc.",
+    description: "Loa trợ giảng P202 mất kết nối bluetooth liên tục.",
     status: "PENDING",
     deviceIds: [devices.P202.speaker.id]
   }));
@@ -706,7 +723,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvKtpm.id,
     roomId: rooms.LAB02.id,
-    description: "May tinh LAB02-03 khong vao duoc he dieu hanh.",
+    description: "Máy tính LAB02-03 không vào được hệ điều hành.",
     status: "COMPLETED",
     deviceIds: [devices.LAB02.computers[2].id]
   });
@@ -715,7 +732,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvMang.id,
     roomId: rooms.LAB02.id,
-    description: "Switch mang LAB02 chap chon, mot day may mat ket noi.",
+    description: "Switch mạng LAB02 chập chờn, một dãy máy mất kết nối.",
     status: "IN_PROGRESS",
     deviceIds: [devices.LAB02.switch.id]
   });
@@ -724,7 +741,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvHoa.id,
     roomId: rooms["LAB-HOA"].id,
-    description: "He thong hut khi LAB-HOA khong hut duoc mui thi nghiem.",
+    description: "Hệ thống hút khí LAB-HOA không hút được mùi thí nghiệm.",
     status: "PENDING",
     deviceIds: [devices["LAB-HOA"].hood.id]
   }));
@@ -732,7 +749,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvKtpm.id,
     roomId: rooms.LAB03.id,
-    description: "Hai may tinh LAB03-05 va LAB03-08 khong ket noi duoc mang noi bo.",
+    description: "Hai máy tính LAB03-05 và LAB03-08 không kết nối được mạng nội bộ.",
     status: "PENDING",
     deviceIds: [devices.LAB03.computers[4].id, devices.LAB03.computers[7].id]
   }));
@@ -740,7 +757,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvMang.id,
     roomId: rooms["LAB-MANG"].id,
-    description: "Switch trung tam LAB-MANG bao loi cong uplink.",
+    description: "Switch trung tâm LAB-MANG báo lỗi cổng uplink.",
     status: "IN_PROGRESS",
     deviceIds: [devices["LAB-MANG"].switch.id]
   });
@@ -749,7 +766,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvVatLy.id,
     roomId: rooms["LAB-DT"].id,
-    description: "Tram han linh kien LAB-DT khong dieu chinh duoc nhiet do.",
+    description: "Trạm hàn linh kiện LAB-DT không điều chỉnh được nhiệt độ.",
     status: "COMPLETED",
     deviceIds: [devices["LAB-DT"].solderingStation.id]
   });
@@ -758,7 +775,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.thuVien.id,
     roomId: rooms["LIB-01"].id,
-    description: "May chieu phong thu vien khong nhan tin hieu tu laptop.",
+    description: "Máy chiếu phòng thư viện không nhận tín hiệu từ laptop.",
     status: "PENDING",
     deviceIds: [devices["LIB-01"].projector.id]
   }));
@@ -766,7 +783,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.admin2.id,
     roomId: rooms["HALL-A1"].id,
-    description: "He thong loa hoi truong A1 bi mat mot kenh am thanh.",
+    description: "Hệ thống loa hội trường A1 bị mất một kênh âm thanh.",
     status: "IN_PROGRESS",
     deviceIds: [devices["HALL-A1"].speaker.id]
   });
@@ -778,7 +795,7 @@ async function seedPtit(passwordHash) {
     reportId: reportP102Ac.id,
     technicianId: users.techDien.id,
     repairedAt: at("2026-06-10"),
-    content: "Ve sinh luoi loc, kiem tra gas lanh, thiet bi can theo doi them.",
+    content: "Vệ sinh lưới lọc, kiểm tra gas lạnh, thiết bị cần theo dõi thêm.",
     afterStatus: "REPAIRING"
   });
   await ensureRepairLog({
@@ -787,7 +804,7 @@ async function seedPtit(passwordHash) {
     reportId: reportLab01Speaker.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-11"),
-    content: "Thay day tin hieu am thanh va kiem tra lai cong ket noi.",
+    content: "Thay dây tín hiệu âm thanh và kiểm tra lại cổng kết nối.",
     afterStatus: "GOOD"
   });
   await ensureRepairLog({
@@ -796,7 +813,7 @@ async function seedPtit(passwordHash) {
     reportId: reportP202Projector.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-13"),
-    content: "Ve sinh kinh chieu, dat mua bong den thay the, tam thoi de trang thai dang sua.",
+    content: "Vệ sinh kính chiếu, đặt mua bóng đèn thay thế, tạm thời để trạng thái đang sửa.",
     afterStatus: "REPAIRING"
   });
   await ensureRepairLog({
@@ -805,7 +822,7 @@ async function seedPtit(passwordHash) {
     reportId: reportLab02Pc.id,
     technicianId: users.techIt.id,
     repairedAt: at("2026-06-14"),
-    content: "Cai lai he dieu hanh va khoi phuc driver card mang.",
+    content: "Cài lại hệ điều hành và khôi phục driver card mạng.",
     afterStatus: "GOOD"
   });
   await ensureRepairLog({
@@ -814,7 +831,7 @@ async function seedPtit(passwordHash) {
     reportId: reportLab02Switch.id,
     technicianId: users.techIt.id,
     repairedAt: at("2026-06-15"),
-    content: "Thay day uplink tam thoi va theo doi switch trong 48 gio.",
+    content: "Thay dây uplink tạm thời và theo dõi switch trong 48 giờ.",
     afterStatus: "REPAIRING"
   });
   await ensureRepairLog({
@@ -823,7 +840,7 @@ async function seedPtit(passwordHash) {
     reportId: reportLabMang.id,
     technicianId: users.techIt.id,
     repairedAt: at("2026-06-16"),
-    content: "Cap nhat firmware switch, cong uplink con loi khi tai cao.",
+    content: "Cập nhật firmware switch, cổng uplink còn lỗi khi tải cao.",
     afterStatus: "REPAIRING"
   });
   await ensureRepairLog({
@@ -832,7 +849,7 @@ async function seedPtit(passwordHash) {
     reportId: reportLabDt.id,
     technicianId: users.techDien.id,
     repairedAt: at("2026-06-16"),
-    content: "Thay bo dieu khien nhiet va hieu chuan lai dau han.",
+    content: "Thay bộ điều khiển nhiệt và hiệu chuẩn lại đầu hàn.",
     afterStatus: "GOOD"
   });
   await ensureRepairLog({
@@ -841,7 +858,7 @@ async function seedPtit(passwordHash) {
     reportId: reportHallSpeaker.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-17"),
-    content: "Kiem tra amply va day loa, can thay jack tin hieu kenh phai.",
+    content: "Kiểm tra amply và dây loa, cần thay jack tín hiệu kênh phải.",
     afterStatus: "REPAIRING"
   });
   await ensureRepairLog({
@@ -850,15 +867,15 @@ async function seedPtit(passwordHash) {
     reportId: null,
     technicianId: users.techIt.id,
     repairedAt: at("2026-06-12"),
-    content: "Bao tri dinh ky may tinh LAB03-12, ve sinh may va cap nhat phan mem.",
+    content: "Bảo trì định kỳ máy tính LAB03-12, vệ sinh máy và cập nhật phần mềm.",
     afterStatus: "GOOD"
   });
 
   await ensureNotification({
     organizationId: organization.id,
     type: "ADMIN_ANNOUNCEMENT",
-    title: "Lich kiem tra thiet bi tuan 25",
-    message: "De nghi doi ky thuat ra soat may chieu, am thanh va dieu hoa tai cac phong hoc tang 2-4.",
+    title: "Lịch kiểm tra thiết bị tuần 25",
+    message: "Đề nghị đội kỹ thuật rà soát máy chiếu, âm thanh và điều hòa tại các phòng học tầng 2-4.",
     recipientId: users.tech.id,
     actorId: users.admin.id,
     isRead: false
@@ -868,8 +885,8 @@ async function seedPtit(passwordHash) {
     await ensureNotification({
       organizationId: organization.id,
       type: "DAMAGE_REPORT",
-      title: `Phieu bao hong #${report.id} - ${report.room.code}`,
-      message: `${report.reporter.fullName} bao hong tai phong ${report.room.code}: ${report.devices.map((item) => item.device.name).join(", ")}.`,
+      title: `Phiếu báo hỏng #${report.id} - ${report.room.code}`,
+      message: `${report.reporter.fullName} báo hỏng tại phòng ${report.room.code}: ${report.devices.map((item) => item.device.name).join(", ")}.`,
       recipientId: users.admin.id,
       actorId: report.reporterId,
       reportId: report.id,
@@ -882,48 +899,48 @@ async function seedPtit(passwordHash) {
 
 async function seedHou(passwordHash) {
   const organization = await ensureOrganization({
-    name: "Truong Dai hoc Mo Ha Noi",
+    name: "Trường Đại học Mở Hà Nội",
     slug: "hou",
-    address: "B101 Nguyen Hien, Hai Ba Trung, Ha Noi",
+    address: "B101 Nguyễn Hiền, Hai Bà Trưng, Hà Nội",
     phone: "02438682321",
     email: "quantricsvc@hou.edu.vn"
   });
 
   const users = {
     admin: await ensureUser(organization.id, {
-      fullName: "Hoang Thu Trang",
+      fullName: "Hoàng Thu Trang",
       username: "hou_admin",
       role: "ADMIN",
       email: "admin@hou.edu.vn",
       birthYear: 1989,
-      address: "Hai Ba Trung, Ha Noi",
+      address: "Hai Bà Trưng, Hà Nội",
       phone: "0911000001"
     }, passwordHash),
     tech: await ensureUser(organization.id, {
-      fullName: "Pham Van Kien",
+      fullName: "Phạm Văn Kiên",
       username: "hou_tech",
       role: "TECHNICIAN",
       email: "tech@hou.edu.vn",
       birthYear: 1992,
-      address: "Hoang Mai, Ha Noi",
+      address: "Hoàng Mai, Hà Nội",
       phone: "0911000002"
     }, passwordHash),
     reporter: await ensureUser(organization.id, {
-      fullName: "Dang Minh Chau",
+      fullName: "Đặng Minh Châu",
       username: "hou_reporter",
       role: "REPORTER",
       email: "reporter@hou.edu.vn",
       birthYear: 1990,
-      address: "Thanh Tri, Ha Noi",
+      address: "Thanh Trì, Hà Nội",
       phone: "0911000003"
     }, passwordHash),
     reporter2: await ensureUser(organization.id, {
-      fullName: "Le Bao Anh",
+      fullName: "Lê Bảo Anh",
       username: "hou_gv_media",
       role: "REPORTER",
       email: "media@hou.edu.vn",
       birthYear: 1986,
-      address: "Dong Da, Ha Noi",
+      address: "Đống Đa, Hà Nội",
       phone: "0911000004"
     }, passwordHash)
   };
@@ -961,7 +978,7 @@ async function seedHou(passwordHash) {
   devices.MEDIA01 = {
     camera: await ensureDevice(organization.id, {
       code: "CAM-MEDIA01-01",
-      name: "Camera ghi hinh MEDIA01",
+      name: "Camera ghi hình MEDIA01",
       type: "OTHER",
       status: "GOOD",
       importedAt: at("2026-03-01"),
@@ -969,7 +986,7 @@ async function seedHou(passwordHash) {
     }),
     speaker: await ensureDevice(organization.id, {
       code: "SP-MEDIA01-01",
-      name: "Bo loa kiem am MEDIA01",
+      name: "Bộ loa kiểm âm MEDIA01",
       type: "SPEAKER",
       status: "REPAIRING",
       importedAt: at("2026-03-01"),
@@ -977,7 +994,7 @@ async function seedHou(passwordHash) {
     }),
     computer: await ensureDevice(organization.id, {
       code: "PC-MEDIA01-01",
-      name: "May dung phim MEDIA01",
+      name: "Máy dựng phim MEDIA01",
       type: "COMPUTER",
       status: "GOOD",
       importedAt: at("2026-03-02"),
@@ -987,7 +1004,7 @@ async function seedHou(passwordHash) {
   devices["LAB-CN"] = {
     printer: await ensureDevice(organization.id, {
       code: "PR-CN-01",
-      name: "May in mau LAB-CN",
+      name: "Máy in màu LAB-CN",
       type: "OTHER",
       status: "BROKEN",
       importedAt: at("2026-04-05"),
@@ -995,7 +1012,7 @@ async function seedHou(passwordHash) {
     }),
     projector: await ensureDevice(organization.id, {
       code: "MC-CN-01",
-      name: "May chieu LAB-CN",
+      name: "Máy chiếu LAB-CN",
       type: "PROJECTOR",
       status: "GOOD",
       importedAt: at("2026-04-05"),
@@ -1007,7 +1024,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.A102.id,
-    description: "Dieu hoa A102 khong mat trong tiet hoc buoi chieu.",
+    description: "Điều hòa A102 không mát trong tiết học buổi chiều.",
     status: "PENDING",
     deviceIds: [devices.A102.airConditioner.id]
   });
@@ -1015,7 +1032,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.B201.id,
-    description: "Tivi B201 khong nhan dieu khien va man hinh toi.",
+    description: "Tivi B201 không nhận điều khiển và màn hình tối.",
     status: "PENDING",
     deviceIds: [devices.B201.tv.id]
   });
@@ -1023,7 +1040,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.CLAB01.id,
-    description: "May tinh CLAB01-04 va CLAB01-09 khoi dong cham, hay treo ung dung.",
+    description: "Máy tính CLAB01-04 và CLAB01-09 khởi động chậm, hay treo ứng dụng.",
     status: "COMPLETED",
     deviceIds: [devices.CLAB01.computers[3].id, devices.CLAB01.computers[8].id]
   });
@@ -1031,7 +1048,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter2.id,
     roomId: rooms.MEDIA01.id,
-    description: "Loa kiem am MEDIA01 bi mat tieng ben trai.",
+    description: "Loa kiểm âm MEDIA01 bị mất tiếng bên trái.",
     status: "IN_PROGRESS",
     deviceIds: [devices.MEDIA01.speaker.id]
   });
@@ -1039,7 +1056,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms["LAB-CN"].id,
-    description: "May in mau LAB-CN bao ket giay lien tuc.",
+    description: "Máy in màu LAB-CN báo kẹt giấy liên tục.",
     status: "PENDING",
     deviceIds: [devices["LAB-CN"].printer.id]
   });
@@ -1050,7 +1067,7 @@ async function seedHou(passwordHash) {
     reportId: reportClabPc.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-15"),
-    content: "Thay o cung SSD cho may CLAB01-04 va toi uu ung dung hoc tap.",
+    content: "Thay ổ cứng SSD cho máy CLAB01-04 và tối ưu ứng dụng học tập.",
     afterStatus: "GOOD"
   });
   await ensureRepairLog({
@@ -1059,7 +1076,7 @@ async function seedHou(passwordHash) {
     reportId: reportClabPc.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-15"),
-    content: "Ve sinh RAM, cai lai driver do hoa cho may CLAB01-09.",
+    content: "Vệ sinh RAM, cài lại driver đồ họa cho máy CLAB01-09.",
     afterStatus: "GOOD"
   });
   await ensureRepairLog({
@@ -1068,7 +1085,7 @@ async function seedHou(passwordHash) {
     reportId: reportMediaSpeaker.id,
     technicianId: users.tech.id,
     repairedAt: at("2026-06-17"),
-    content: "Kiem tra day tin hieu loa kiem am, dat bo chuyen doi thay the.",
+    content: "Kiểm tra dây tín hiệu loa kiểm âm, đặt bộ chuyển đổi thay thế.",
     afterStatus: "REPAIRING"
   });
 
@@ -1076,8 +1093,8 @@ async function seedHou(passwordHash) {
     await ensureNotification({
       organizationId: organization.id,
       type: "DAMAGE_REPORT",
-      title: `Phieu bao hong #${report.id} - ${report.room.code}`,
-      message: `${report.reporter.fullName} bao hong tai phong ${report.room.code}: ${report.devices.map((item) => item.device.name).join(", ")}.`,
+      title: `Phiếu báo hỏng #${report.id} - ${report.room.code}`,
+      message: `${report.reporter.fullName} báo hỏng tại phòng ${report.room.code}: ${report.devices.map((item) => item.device.name).join(", ")}.`,
       recipientId: users.admin.id,
       actorId: report.reporterId,
       reportId: report.id,
@@ -1088,8 +1105,8 @@ async function seedHou(passwordHash) {
   await ensureNotification({
     organizationId: organization.id,
     type: "ADMIN_ANNOUNCEMENT",
-    title: "Kiem ke thiet bi thang 6",
-    message: "Phong quan tri yeu cau ra soat so luong may tinh, may chieu va thiet bi am thanh truoc ngay 25/06.",
+    title: "Kiểm kê thiết bị tháng 6",
+    message: "Phòng quản trị yêu cầu rà soát số lượng máy tính, máy chiếu và thiết bị âm thanh trước ngày 25/06.",
     recipientId: users.tech.id,
     actorId: users.admin.id,
     isRead: false
@@ -1128,3 +1145,5 @@ main()
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
+
+

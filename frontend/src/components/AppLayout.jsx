@@ -2,6 +2,19 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import {
+  Bell,
+  Building2,
+  ClipboardList,
+  DoorOpen,
+  FileWarning,
+  KeyRound,
+  LayoutDashboard,
+  LogOut,
+  MonitorCog,
+  UserCog,
+  UserRound
+} from "lucide-react";
 import api from "../api";
 
 const roleLabels = {
@@ -11,15 +24,15 @@ const roleLabels = {
 };
 
 const navItems = [
-  { key: "dashboard", to: "/dashboard", icon: "H", label: "Trang chủ" },
-  { key: "rooms", to: "/rooms", icon: "P", label: "Phòng học" },
-  { key: "devices", to: "/devices", icon: "T", label: "Thiết bị" },
-  { key: "report-new", to: "/reports/new", icon: "!", label: "Báo hỏng" },
-  { key: "reports", to: "/reports", icon: "B", label: "Phiếu báo hỏng" },
-  { key: "profile", to: "/profile", icon: "U", label: "Hồ sơ" },
-  { key: "organization", to: "/organization", icon: "O", label: "Tổ chức", adminOnly: true },
-  { key: "users", to: "/users", icon: "N", label: "Người dùng", adminOnly: true },
-  { key: "roles", to: "/roles", icon: "R", label: "Phân quyền", adminOnly: true }
+  { key: "dashboard", to: "/dashboard", label: "Trang chủ", icon: LayoutDashboard },
+  { key: "rooms", to: "/rooms", label: "Phòng học", icon: DoorOpen },
+  { key: "devices", to: "/devices", label: "Thiết bị", icon: MonitorCog },
+  { key: "report-new", to: "/reports/new", label: "Báo hỏng", icon: FileWarning },
+  { key: "reports", to: "/reports", label: "Phiếu báo hỏng", icon: ClipboardList },
+  { key: "profile", to: "/profile", label: "Hồ sơ", icon: UserRound },
+  { key: "organization", to: "/organization", label: "Tổ chức", icon: Building2, adminOnly: true },
+  { key: "users", to: "/users", label: "Người dùng", icon: UserCog, adminOnly: true },
+  { key: "roles", to: "/roles", label: "Phân quyền", icon: KeyRound, adminOnly: true }
 ];
 
 export default function AppLayout({ active, title, subtitle, user, children }) {
@@ -57,6 +70,18 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
   const overviewNavItems = visibleNavItems.slice(0, 1);
   const managementNavItems = visibleNavItems.filter((item) => ["rooms", "devices", "report-new", "reports"].includes(item.key));
   const accountNavItems = visibleNavItems.filter((item) => ["profile", "organization", "users", "roles"].includes(item.key));
+  const renderNavItem = (item) => {
+    const Icon = item.icon;
+
+    return (
+      <Link key={item.key} className={active === item.key ? "sidebar-link active" : "sidebar-link"} to={item.to}>
+        <span className="sidebar-link-icon" aria-hidden="true">
+          <Icon size={18} strokeWidth={2.2} />
+        </span>
+        <em>{item.label}</em>
+      </Link>
+    );
+  };
 
   return (
     <main className="app-shell dashboard-app admin-dark-app">
@@ -79,30 +104,15 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
           {overviewNavItems.length > 0 && (
             <>
               <p className="nav-group-title">Tổng quan</p>
-              {overviewNavItems.map((item) => (
-                <Link key={item.key} className={active === item.key ? "sidebar-link active" : "sidebar-link"} to={item.to}>
-                  <span>{item.icon}</span>
-                  <em>{item.label}</em>
-                </Link>
-              ))}
+              {overviewNavItems.map(renderNavItem)}
             </>
           )}
 
           <p className="nav-group-title">Quản lý</p>
-          {managementNavItems.map((item) => (
-            <Link key={item.key} className={active === item.key ? "sidebar-link active" : "sidebar-link"} to={item.to}>
-              <span>{item.icon}</span>
-              <em>{item.label}</em>
-            </Link>
-          ))}
+          {managementNavItems.map(renderNavItem)}
 
           <p className="nav-group-title">Tài khoản</p>
-          {accountNavItems.map((item) => (
-            <Link key={item.key} className={active === item.key ? "sidebar-link active" : "sidebar-link"} to={item.to}>
-              <span>{item.icon}</span>
-              <em>{item.label}</em>
-            </Link>
-          ))}
+          {accountNavItems.map(renderNavItem)}
         </nav>
 
         <div className="sidebar-bottom">
@@ -115,6 +125,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
           </section>
 
           <button type="button" className="sidebar-logout-button" onClick={logout}>
+            <LogOut size={17} strokeWidth={2.2} aria-hidden="true" />
             Đăng xuất
           </button>
         </div>
@@ -129,7 +140,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
               onClick={() => navigate("/notifications")}
               aria-label={`Mở trung tâm thông báo${unreadCount > 0 ? `, có ${unreadCount} thông báo chưa đọc` : ""}`}
             >
-              <span>!</span>
+              <span><Bell size={18} strokeWidth={2.2} aria-hidden="true" /></span>
               {unreadCount > 0 && <strong>{unreadCount}</strong>}
             </button>
             <div className="topbar-user-chip"><span>{initial}</span>{user?.username || "user"}</div>

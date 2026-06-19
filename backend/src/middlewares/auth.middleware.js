@@ -10,7 +10,7 @@ function authenticate(req, res, next) {
   try {
     const token = authHeader.split(" ")[1];
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    if (!req.user.organizationId && req.user.role !== "SYSTEM_ADMIN") {
+    if (!req.user.organizationId) {
       return res.status(401).json({ message: "Token không có thông tin trường học. Vui lòng đăng nhập lại" });
     }
     return next();

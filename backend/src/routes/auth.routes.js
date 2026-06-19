@@ -123,74 +123,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Vui lòng nhập mã trường, tên đăng nhập và mật khẩu" });
     }
 
-    if (organizationSlug === "system") {
-      const user = await prisma.user.findFirst({
-        where: {
-          username,
-          role: "SYSTEM_ADMIN",
-          organizationId: null
-        }
-      });
-
-      if (!user) {
-        return res.status(401).json({ message: "Tài khoản quản trị hệ thống hoặc mật khẩu không đúng" });
-      }
-
-      const now = new Date();
-
-      if (user.status === "LOCKED" && user.lockedUntil && user.lockedUntil > now) {
-        return res.status(403).json({ message: "Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau." });
-      }
-
-      if (user.status === "LOCKED" && user.lockedUntil && user.lockedUntil <= now) {
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            status: "ACTIVE",
-            failedLoginCount: 0,
-            lockedUntil: null
-          }
-        });
-      }
-
-      const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-
-      if (!isValidPassword) {
-        const failedLoginCount = user.failedLoginCount + 1;
-        const shouldLock = failedLoginCount >= MAX_FAILED_LOGIN;
-
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            failedLoginCount,
-            status: shouldLock ? "LOCKED" : "ACTIVE",
-            lockedUntil: shouldLock ? new Date(Date.now() + LOCK_MINUTES * 60 * 1000) : null
-          }
-        });
-
-        if (shouldLock) {
-          return res.status(403).json({ message: "Tài khoản đã bị khóa 15 phút do nhập sai mật khẩu 5 lần" });
-        }
-
-        return res.status(401).json({ message: "Tài khoản quản trị hệ thống hoặc mật khẩu không đúng" });
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          failedLoginCount: 0,
-          status: "ACTIVE",
-          lockedUntil: null
-        }
-      });
-
-      return res.json({
-        message: "Đăng nhập quản trị hệ thống thành công",
-        token: buildToken(updatedUser, null),
-        user: publicUser(updatedUser, null)
-      });
-    }
-
     const organization = await prisma.organization.findUnique({ where: { slug: organizationSlug } });
 
     if (!organization) {
@@ -304,7 +236,7 @@ router.get("/me", authenticate, async (req, res) => {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
     }
 
-    if (req.user.role !== "SYSTEM_ADMIN" && user.organization?.id !== req.user.organizationId) {
+    if (user.organization?.id !== req.user.organizationId) {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
     }
 

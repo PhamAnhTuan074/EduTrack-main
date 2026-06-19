@@ -20,7 +20,7 @@ function getTokenExpiry(token) {
 function hasValidScope(token) {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.role === "SYSTEM_ADMIN" || Boolean(payload.organizationId);
+    return Boolean(payload.organizationId);
   } catch {
     return false;
   }

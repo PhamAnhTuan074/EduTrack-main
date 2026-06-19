@@ -20,14 +20,12 @@ Each organization has its own isolated data space for rooms, devices, damage rep
 - Personal profile management with contact information and password change.
 - Pagination, sorting, search, and filters on main management lists.
 - Admin role-permission matrix for the current facility workflow.
-- System admin role for managing all registered schools and each school's admin accounts.
 
 ## Demo Account
 
 After running the seed script:
 
 - Organization code: `ptit`
-- System admin: organization code `system`, username `systemadmin`, password `123456`
 - Admin: `admin` / `123456`
 - Technician: `tech` / `123456`
 - Reporter: `reporter` / `123456`
@@ -82,13 +80,6 @@ Add or refresh the larger non-destructive demo dataset:
 cd backend
 $env:DATABASE_URL="postgresql://postgres:123456@localhost:5432/facility_management"
 npm run prisma:seed-extra
-```
-
-Create the system admin on an existing database without deleting data:
-
-```bash
-cd backend
-npm run system-admin:ensure
 ```
 
 Frontend runs at `http://localhost:3000`.

@@ -16,7 +16,6 @@ import UsersPage from "./pages/UsersPage";
 import OrganizationSettingsPage from "./pages/OrganizationSettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import RolesPage from "./pages/RolesPage";
-import SystemOrganizationsPage from "./pages/SystemOrganizationsPage";
 import RepairLogFormPage from "./pages/RepairLogFormPage";
 import DeviceHistoryPage from "./pages/DeviceHistoryPage";
 import "./App.css";
@@ -39,7 +38,6 @@ function App() {
         <Route path="/organization" element={<ProtectedRoute><OrganizationSettingsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/roles" element={<ProtectedRoute><RolesPage /></ProtectedRoute>} />
-        <Route path="/system/organizations" element={<ProtectedRoute><SystemOrganizationsPage /></ProtectedRoute>} />
         <Route path="/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
         <Route path="/repair-logs/new" element={<ProtectedRoute><RepairLogFormPage /></ProtectedRoute>} />

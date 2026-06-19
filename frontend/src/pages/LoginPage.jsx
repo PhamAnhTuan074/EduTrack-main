@@ -24,7 +24,7 @@ export default function LoginPage() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      navigate(res.data.user?.role === "SYSTEM_ADMIN" ? "/system/organizations" : "/dashboard");
+      navigate("/dashboard");
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -49,14 +49,14 @@ export default function LoginPage() {
             <p>Mỗi trường học có không gian dữ liệu riêng để quản lý phòng học, thiết bị, báo hỏng và sửa chữa.</p>
           </div>
 
-          <p className="login-brand-footer">Dùng thử: system / systemadmin / 123456 hoặc ptit / admin / 123456</p>
+          <p className="login-brand-footer">Dùng thử: ptit / admin / 123456</p>
         </aside>
 
         <form className="login-form-panel" onSubmit={handleLogin}>
           <div className="login-form-heading">
             <h2>Đăng nhập hệ thống</h2>
             <p className="login-welcome">Chào mừng bạn quay lại</p>
-            <p className="login-helper">Nhập mã trường để truy cập đúng dữ liệu, hoặc dùng mã system cho quản trị nền tảng</p>
+            <p className="login-helper">Nhập mã trường để truy cập đúng dữ liệu của tổ chức</p>
           </div>
 
           <label className="login-field" htmlFor="organizationSlug">
@@ -66,7 +66,7 @@ export default function LoginPage() {
               value={organizationSlug}
               onChange={(e) => setOrganizationSlug(e.target.value)}
               autoComplete="organization"
-              placeholder="ptit hoặc system"
+              placeholder="ptit"
             />
           </label>
 

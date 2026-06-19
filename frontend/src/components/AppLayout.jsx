@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import api from "../api";
 
 const roleLabels = {
-  SYSTEM_ADMIN: "Quản trị hệ thống",
   ADMIN: "Quản trị viên",
   TECHNICIAN: "Kỹ thuật viên",
   REPORTER: "Người báo hỏng"
@@ -18,26 +17,20 @@ const navItems = [
   { key: "profile", to: "/profile", icon: "U", label: "Hồ sơ" },
   { key: "organization", to: "/organization", icon: "O", label: "Tổ chức", adminOnly: true },
   { key: "users", to: "/users", icon: "N", label: "Người dùng", adminOnly: true },
-  { key: "roles", to: "/roles", icon: "R", label: "Phân quyền", adminOnly: true },
-  { key: "system-organizations", to: "/system/organizations", icon: "S", label: "Quản lý trường", systemOnly: true }
+  { key: "roles", to: "/roles", icon: "R", label: "Phân quyền", adminOnly: true }
 ];
 
 export default function AppLayout({ active, title, subtitle, user, children }) {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
-  const isSystemAdmin = user?.role === "SYSTEM_ADMIN";
 
   const displayName = user?.fullName || user?.username || "Người dùng";
   const displayRole = roleLabels[user?.role] || user?.role || "Chưa có vai trò";
-  const organizationName = isSystemAdmin ? "Toàn hệ thống" : user?.organization?.name || "Chưa chọn trường";
-  const organizationSlug = isSystemAdmin ? "system" : user?.organization?.slug || "";
+  const organizationName = user?.organization?.name || "Chưa chọn trường";
+  const organizationSlug = user?.organization?.slug || "";
   const initial = displayName.trim().charAt(0).toUpperCase() || "U";
 
   useEffect(() => {
-    if (isSystemAdmin) {
-      return undefined;
-    }
-
     async function loadUnreadCount() {
       try {
         const res = await api.get("/notifications/unread-count");
@@ -48,7 +41,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
     }
 
     loadUnreadCount();
-  }, [isSystemAdmin]);
+  }, []);
 
   function logout() {
     localStorage.removeItem("token");
@@ -57,16 +50,10 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
   }
 
   const visibleNavItems = navItems.filter((item) => {
-    if (isSystemAdmin) {
-      return item.systemOnly || item.key === "profile";
-    }
-
-    return !item.systemOnly && (!item.adminOnly || user?.role === "ADMIN");
+    return !item.adminOnly || user?.role === "ADMIN";
   });
-  const overviewNavItems = isSystemAdmin ? [] : visibleNavItems.slice(0, 1);
-  const managementNavItems = isSystemAdmin
-    ? visibleNavItems.filter((item) => item.systemOnly)
-    : visibleNavItems.filter((item) => ["rooms", "devices", "report-new", "reports"].includes(item.key));
+  const overviewNavItems = visibleNavItems.slice(0, 1);
+  const managementNavItems = visibleNavItems.filter((item) => ["rooms", "devices", "report-new", "reports"].includes(item.key));
   const accountNavItems = visibleNavItems.filter((item) => ["profile", "organization", "users", "roles"].includes(item.key));
 
   return (
@@ -99,7 +86,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
             </>
           )}
 
-          <p className="nav-group-title">{isSystemAdmin ? "Hệ thống" : "Quản lý"}</p>
+          <p className="nav-group-title">Quản lý</p>
           {managementNavItems.map((item) => (
             <Link key={item.key} className={active === item.key ? "sidebar-link active" : "sidebar-link"} to={item.to}>
               <span>{item.icon}</span>
@@ -134,17 +121,15 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
       <section className="content-panel dashboard-content admin-content">
         <div className="admin-topbar">
           <div className="topbar-actions">
-            {!isSystemAdmin && (
-              <button
-                type="button"
-                className={active === "notifications" ? "notification-bell-button active" : "notification-bell-button"}
-                onClick={() => navigate("/notifications")}
-                aria-label={`Mở trung tâm thông báo${unreadCount > 0 ? `, có ${unreadCount} thông báo chưa đọc` : ""}`}
-              >
-                <span>!</span>
-                {unreadCount > 0 && <strong>{unreadCount}</strong>}
-              </button>
-            )}
+            <button
+              type="button"
+              className={active === "notifications" ? "notification-bell-button active" : "notification-bell-button"}
+              onClick={() => navigate("/notifications")}
+              aria-label={`Mở trung tâm thông báo${unreadCount > 0 ? `, có ${unreadCount} thông báo chưa đọc` : ""}`}
+            >
+              <span>!</span>
+              {unreadCount > 0 && <strong>{unreadCount}</strong>}
+            </button>
             <div className="topbar-user-chip"><span>{initial}</span>{user?.username || "user"}</div>
           </div>
         </div>

@@ -67,7 +67,7 @@ router.get("/profile", authenticate, async (req, res) => {
       select: selectUser()
     });
 
-    if (!user || (req.user.role !== "SYSTEM_ADMIN" && user.organization?.id !== req.user.organizationId)) {
+    if (!user || user.organization?.id !== req.user.organizationId) {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
     }
 
@@ -115,7 +115,7 @@ router.put("/profile/password", authenticate, async (req, res) => {
 
     const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 
-    if (!user || (req.user.role !== "SYSTEM_ADMIN" && user.organizationId !== req.user.organizationId)) {
+    if (!user || user.organizationId !== req.user.organizationId) {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
     }
 

@@ -15,20 +15,6 @@ async function main() {
 
   const passwordHash = await bcrypt.hash("123456", 10);
 
-  await prisma.user.create({
-    data: {
-      organizationId: null,
-      fullName: "Quan tri he thong EduTrack",
-      username: "systemadmin",
-      passwordHash,
-      role: "SYSTEM_ADMIN",
-      email: "systemadmin@edutrack.local",
-      birthYear: 1990,
-      address: "He thong EduTrack",
-      phone: "0900000000"
-    }
-  });
-
   const organization = await prisma.organization.create({
     data: {
       name: "Hoc vien Cong nghe Buu chinh Vien thong",
@@ -257,7 +243,7 @@ async function main() {
   });
 
   console.log(`Seed completed for organization=${organization.slug}`);
-  console.log("Demo accounts: system / systemadmin / 123456, ptit / admin / 123456, ptit / tech / 123456, ptit / reporter / 123456");
+  console.log("Demo accounts: ptit / admin / 123456, ptit / tech / 123456, ptit / reporter / 123456");
 }
 
 main()

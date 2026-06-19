@@ -12,7 +12,6 @@ const exportRouter = require("./routes/export.routes");
 const notificationRouter = require("./routes/notification.routes");
 const userRouter = require("./routes/user.routes");
 const organizationRouter = require("./routes/organization.routes");
-const systemRouter = require("./routes/system.routes");
 dotenv.config();
 
 const app = express();
@@ -54,7 +53,6 @@ app.use("/api/export", exportRouter);
 app.use("/api/notifications", notificationRouter);
 app.use("/api/users", userRouter);
 app.use("/api/organizations", organizationRouter);
-app.use("/api/system", systemRouter);
 
 const PORT = process.env.PORT || 5000;
 

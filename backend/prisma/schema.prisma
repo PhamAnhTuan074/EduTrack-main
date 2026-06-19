@@ -8,7 +8,6 @@ datasource db {
 }
 
 enum Role {
-  SYSTEM_ADMIN
   ADMIN
   TECHNICIAN
   REPORTER
@@ -86,7 +85,7 @@ model Organization {
 
 model User {
   id                Int            @id @default(autoincrement())
-  organizationId    Int?
+  organizationId    Int
   fullName          String
   username          String
   email             String?
@@ -98,7 +97,7 @@ model User {
   status            UserStatus     @default(ACTIVE)
   failedLoginCount  Int            @default(0)
   lockedUntil       DateTime?
-  organization      Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization      Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   damageReports     DamageReport[]
   repairLogs        RepairLog[]
   notifications     Notification[] @relation("RecipientNotifications")

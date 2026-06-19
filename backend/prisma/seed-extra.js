@@ -1099,16 +1099,6 @@ async function seedHou(passwordHash) {
 async function main() {
   const passwordHash = await bcrypt.hash(DEFAULT_PASSWORD, 10);
 
-  await ensureUser(null, {
-    fullName: "Quan tri he thong EduTrack",
-    username: "systemadmin",
-    role: "SYSTEM_ADMIN",
-    email: "systemadmin@edutrack.local",
-    birthYear: 1990,
-    address: "He thong EduTrack",
-    phone: "0900000000"
-  }, passwordHash);
-
   const organizations = [
     await seedPtit(passwordHash),
     await seedHou(passwordHash)

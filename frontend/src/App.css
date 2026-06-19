@@ -3666,3 +3666,35 @@ button,
     width: 100%;
   }
 }
+/* Làm sáng các khung bộ lọc, hồ sơ, đổi mật khẩu */
+.admin-dark-app .organization-settings-panel,
+.admin-dark-app .list-controls {
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04) !important;
+}
+
+/* Đường kẻ trong khung */
+.admin-dark-app .organization-settings-header {
+  border-bottom-color: #e5e7eb !important;
+}
+
+/* Chữ phụ trong khung */
+.admin-dark-app .organization-settings-header span,
+.admin-dark-app .organization-settings-header small,
+.admin-dark-app .list-controls label,
+.admin-dark-app .list-controls-summary span,
+.admin-dark-app .pagination-actions span {
+  color: #667085 !important;
+}
+
+/* Chữ chính */
+.admin-dark-app .organization-settings-header strong,
+.admin-dark-app .list-controls-summary strong {
+  color: #111827 !important;
+}
+
+/* Label trong form */
+.admin-dark-app .modal-grid label {
+  color: #344054 !important;
+}

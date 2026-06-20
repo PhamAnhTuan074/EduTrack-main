@@ -45,7 +45,6 @@ export default function PublicHomePage() {
             giúp tách riêng dữ liệu phòng học, thiết bị, báo hỏng, sửa chữa và người dùng.
           </p>
           <div className="public-hero-actions">
-            <Link className="public-button-link" to="/register">Tạo tài khoản tổ chức</Link>
             <Link className="public-outline-link" to="/login">Vào hệ thống</Link>
           </div>
         </div>

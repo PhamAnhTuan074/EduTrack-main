@@ -27,7 +27,6 @@ export default function PublicShell({ active, children }) {
 
         <div className="public-nav-actions">
           <Link className="public-text-link" to="/login">Đăng nhập</Link>
-          <Link className="public-button-link" to="/register">Đăng ký tổ chức</Link>
         </div>
       </header>
 

@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Bell,
-  Building2,
   ClipboardList,
   DoorOpen,
   FileWarning,
@@ -30,7 +29,6 @@ const navItems = [
   { key: "report-new", to: "/reports/new", label: "Báo hỏng", icon: FileWarning },
   { key: "reports", to: "/reports", label: "Phiếu báo hỏng", icon: ClipboardList },
   { key: "profile", to: "/profile", label: "Hồ sơ", icon: UserRound },
-  { key: "organization", to: "/organization", label: "Tổ chức", icon: Building2, adminOnly: true },
   { key: "users", to: "/users", label: "Người dùng", icon: UserCog, adminOnly: true },
   { key: "roles", to: "/roles", label: "Phân quyền", icon: KeyRound, adminOnly: true }
 ];
@@ -41,8 +39,6 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
 
   const displayName = user?.fullName || user?.username || "Người dùng";
   const displayRole = roleLabels[user?.role] || user?.role || "Chưa có vai trò";
-  const organizationName = user?.organization?.name || "Chưa chọn trường";
-  const organizationSlug = user?.organization?.slug || "";
   const initial = displayName.trim().charAt(0).toUpperCase() || "U";
 
   useEffect(() => {
@@ -69,7 +65,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
   });
   const overviewNavItems = visibleNavItems.slice(0, 1);
   const managementNavItems = visibleNavItems.filter((item) => ["rooms", "devices", "report-new", "reports"].includes(item.key));
-  const accountNavItems = visibleNavItems.filter((item) => ["profile", "organization", "users", "roles"].includes(item.key));
+  const accountNavItems = visibleNavItems.filter((item) => ["profile", "users", "roles"].includes(item.key));
   const renderNavItem = (item) => {
     const Icon = item.icon;
 
@@ -93,12 +89,6 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
             <span>Nền tảng quản lý CSVC</span>
           </div>
         </div>
-
-        <section className="sidebar-organization-card" aria-label="Tổ chức hiện tại">
-          <span>Trường / tổ chức</span>
-          <strong>{organizationName}</strong>
-          {organizationSlug && <em>{organizationSlug}</em>}
-        </section>
 
         <nav className="sidebar-nav" aria-label="Điều hướng chính">
           {overviewNavItems.length > 0 && (

@@ -1,6 +1,6 @@
 // Nguoi code: Phạm Anh Tuấn. Pham vi: man hinh dang nhap theo to chuc.
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../api";
 
@@ -119,10 +119,6 @@ export default function LoginPage() {
           <button className="login-submit" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
-
-          <p className="auth-switch-text">
-            Chưa có tài khoản trường? <Link to="/register">Đăng ký tổ chức</Link>
-          </p>
         </form>
       </section>
     </main>

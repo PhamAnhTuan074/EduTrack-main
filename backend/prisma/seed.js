@@ -30,7 +30,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       organizationId: organization.id,
-      fullName: "Quản trị viên CSVC",
+      fullName: "Phạm Anh Tuấn",
       username: "admin",
       passwordHash,
       role: "ADMIN",
@@ -87,7 +87,7 @@ async function main() {
   });
 
   await prisma.device.create({
-    data: deviceData({ code: "TV-P101-01", name: "Tivi P101", type: "TV", status: "BROKEN", roomId: p101.id })
+    data: deviceData({ code: "TV-P101-01", name: "Màn hình hiển thị P101", type: "TV", status: "BROKEN", roomId: p101.id })
   });
 
   const airConditioner = await prisma.device.create({
@@ -105,21 +105,21 @@ async function main() {
   await prisma.device.createMany({
     data: [
       deviceData({ code: "MC-P201-01", name: "Máy chiếu Epson EB-X51 P201", type: "PROJECTOR", status: "GOOD", roomId: p201.id, importedAt: new Date("2026-01-05") }),
-      deviceData({ code: "TV-P201-01", name: "Tivi Samsung 55 inch P201", type: "TV", status: "GOOD", roomId: p201.id, importedAt: new Date("2026-01-05") }),
+      deviceData({ code: "TV-P201-01", name: "Màn hình Samsung 55 inch P201", type: "TV", status: "GOOD", roomId: p201.id, importedAt: new Date("2026-01-05") }),
       deviceData({ code: "AC-P201-01", name: "Điều hòa Daikin P201", type: "AIR_CONDITIONER", status: "BROKEN", roomId: p201.id, importedAt: new Date("2026-01-08") }),
       deviceData({ code: "SP-P201-01", name: "Loa treo tường P201", type: "SPEAKER", status: "GOOD", roomId: p201.id, importedAt: new Date("2026-01-08") }),
       deviceData({ code: "BC-P201-01", name: "Bộ bàn ghế giảng viên P201", type: "TABLE_CHAIR", status: "GOOD", roomId: p201.id, importedAt: new Date("2026-01-10") }),
 
       deviceData({ code: "MC-P202-01", name: "Máy chiếu Panasonic P202", type: "PROJECTOR", status: "REPAIRING", roomId: p202.id, importedAt: new Date("2026-02-02") }),
-      deviceData({ code: "TV-P202-01", name: "Tivi LG 50 inch P202", type: "TV", status: "GOOD", roomId: p202.id, importedAt: new Date("2026-02-02") }),
+      deviceData({ code: "TV-P202-01", name: "Màn hình LG 50 inch P202", type: "TV", status: "GOOD", roomId: p202.id, importedAt: new Date("2026-02-02") }),
       deviceData({ code: "AC-P202-01", name: "Điều hòa Casper P202", type: "AIR_CONDITIONER", status: "GOOD", roomId: p202.id, importedAt: new Date("2026-02-04") }),
-      deviceData({ code: "SP-P202-01", name: "Loa bluetooth trợ giảng P202", type: "SPEAKER", status: "BROKEN", roomId: p202.id, importedAt: new Date("2026-02-04") }),
+      deviceData({ code: "SP-P202-01", name: "Hệ thống loa trợ giảng Bluetooth P202", type: "SPEAKER", status: "BROKEN", roomId: p202.id, importedAt: new Date("2026-02-04") }),
 
       deviceData({ code: "PC-LAB02-01", name: "Máy tính giảng viên LAB02", type: "COMPUTER", status: "GOOD", roomId: lab02.id, importedAt: new Date("2026-03-01") }),
       deviceData({ code: "PC-LAB02-02", name: "Máy tính sinh viên LAB02-02", type: "COMPUTER", status: "GOOD", roomId: lab02.id, importedAt: new Date("2026-03-01") }),
       deviceData({ code: "PC-LAB02-03", name: "Máy tính sinh viên LAB02-03", type: "COMPUTER", status: "BROKEN", roomId: lab02.id, importedAt: new Date("2026-03-01") }),
       deviceData({ code: "MC-LAB02-01", name: "Máy chiếu phòng LAB02", type: "PROJECTOR", status: "GOOD", roomId: lab02.id, importedAt: new Date("2026-03-03") }),
-      deviceData({ code: "SW-LAB02-01", name: "Switch mạng LAB02", type: "OTHER", status: "REPAIRING", roomId: lab02.id, importedAt: new Date("2026-03-05") }),
+      deviceData({ code: "SW-LAB02-01", name: "Bộ chuyển mạch mạng LAB02", type: "OTHER", status: "REPAIRING", roomId: lab02.id, importedAt: new Date("2026-03-05") }),
 
       deviceData({ code: "TB-HOA-01", name: "Bộ dụng cụ thí nghiệm hóa cơ bản", type: "OTHER", status: "GOOD", roomId: labChem.id, importedAt: new Date("2026-04-01") }),
       deviceData({ code: "HT-HOA-01", name: "Hệ thống hút khí LAB-HOA", type: "OTHER", status: "BROKEN", roomId: labChem.id, importedAt: new Date("2026-04-02") }),
@@ -236,7 +236,7 @@ async function main() {
         organizationId: organization.id,
         type: "ADMIN_ANNOUNCEMENT",
         title: "Thông báo kiểm tra thiết bị cuối tuần",
-        message: "Admin yêu cầu rà soát máy chiếu, TV và điều hòa tại các phòng học trước buổi học đầu tuần.",
+        message: "Admin yêu cầu rà soát máy chiếu, màn hình hiển thị và điều hòa tại các phòng học trước buổi học đầu tuần.",
         recipientId: technician.id,
         actorId: admin.id,
         isRead: false

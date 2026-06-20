@@ -7,7 +7,7 @@
   --brand-border: #f3b7c4;
   --text: #111827;
   --muted: #667085;
-  --line: #e5e7eb;
+  --line: #f3f4f6;
   --panel: #ffffff;
   --page: #f7f8fb;
   --green: #059669;
@@ -322,7 +322,7 @@ a {
   display: grid;
   gap: 18px;
   max-width: 820px;
-  border: 1px solid #e4e7ec;
+  border: 1px solid #f0f1f3;
   border-radius: 8px;
   background: #ffffff;
   padding: 22px;
@@ -334,7 +334,7 @@ a {
   justify-content: space-between;
   gap: 20px;
   align-items: flex-start;
-  border-bottom: 1px solid #eef2f7;
+  border-bottom: 1px solid #f5f5f7;
   padding-bottom: 16px;
 }
 
@@ -373,7 +373,7 @@ a {
   align-items: end;
   justify-content: space-between;
   margin: 14px 0;
-  border: 1px solid #e4e7ec;
+  border: 1px solid #f0f1f3;
   border-radius: 8px;
   background: #ffffff;
   padding: 12px;
@@ -3148,7 +3148,80 @@ button,
   box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04) !important;
 }
 
+.history-page-toolbar {
+  align-items: flex-start;
+}
+
+.history-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  color: #667085;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.history-breadcrumb button {
+  min-height: auto !important;
+  color: #4f46e5 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.history-breadcrumb button:hover {
+  color: #3730a3 !important;
+  background: transparent !important;
+}
+
+.history-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.history-summary-panel {
+  margin-bottom: 14px;
+}
+
+.history-table-wrap {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04);
+}
+
+.history-table-wrap .admin-data-table {
+  min-width: 920px;
+}
+
+.history-table-wrap .history-content-cell {
+  max-width: 420px;
+  white-space: normal;
+  line-height: 1.55;
+}
+
+.history-empty-cell {
+  height: 74px;
+  color: #667085 !important;
+  text-align: center;
+  font-weight: 700;
+}
+
 @media (max-width: 820px) {
+  .history-page-toolbar,
+  .history-toolbar-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-toolbar-actions button {
+    width: 100%;
+  }
+
   .repair-summary-panel,
   .repair-form-panel {
     grid-template-columns: 1fr;
@@ -3828,4 +3901,223 @@ button,
   color: #b0002a !important;
   border-color: #f3b7c4 !important;
   background: #fff1f4 !important;
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.dashboard-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 18px 0 22px;
+}
+
+.dashboard-chart-card {
+  display: grid;
+  gap: 18px;
+  min-height: 280px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04);
+}
+
+.dashboard-chart-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dashboard-chart-heading h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+.dashboard-chart-empty {
+  display: grid;
+  place-items: center;
+  min-height: 170px;
+  margin: 0;
+  border: 1px dashed #d7dde8;
+  border-radius: 8px;
+  color: #667085;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.dashboard-bar-chart {
+  display: grid;
+  gap: 16px;
+  align-content: center;
+}
+
+.dashboard-bar-row {
+  display: grid;
+  gap: 8px;
+}
+
+.dashboard-bar-label,
+.dashboard-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dashboard-bar-label span,
+.dashboard-legend-item p {
+  min-width: 0;
+  margin: 0;
+  color: #344054;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-bar-label strong,
+.dashboard-legend-item strong {
+  color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dashboard-bar-track {
+  height: 12px;
+  border-radius: 999px;
+  background: #eef2f7;
+  overflow: hidden;
+}
+
+.dashboard-bar-track span {
+  display: block;
+  height: 100%;
+  min-width: 8px;
+  border-radius: inherit;
+}
+
+.dashboard-donut-card {
+  align-content: start;
+}
+
+.dashboard-donut-layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.dashboard-donut {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 176px;
+  height: 176px;
+  border-radius: 999px;
+  color: #111827;
+}
+
+.dashboard-donut::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border-radius: inherit;
+  background: #ffffff;
+}
+
+.dashboard-donut span,
+.dashboard-donut small {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-donut span {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 750;
+}
+
+.dashboard-donut small {
+  margin-top: 6px;
+  color: #667085;
+  font-size: 12px;
+}
+
+.dashboard-legend {
+  display: grid;
+  gap: 12px;
+}
+
+.dashboard-legend-item {
+  min-height: 42px;
+  border-bottom: 1px solid #eef2f7;
+  padding-bottom: 10px;
+}
+
+.dashboard-legend-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.dashboard-legend-item > span {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  border-radius: 999px;
+}
+
+.admin-dark-app .dashboard-chart-card {
+  border-color: #e5e7eb !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04) !important;
+}
+
+.admin-dark-app .dashboard-chart-heading h2,
+.admin-dark-app .dashboard-bar-label strong,
+.admin-dark-app .dashboard-legend-item strong,
+.admin-dark-app .dashboard-donut span {
+  color: #111827 !important;
+}
+
+.admin-dark-app .dashboard-bar-label span,
+.admin-dark-app .dashboard-legend-item p,
+.admin-dark-app .dashboard-donut small,
+.admin-dark-app .dashboard-chart-empty {
+  color: #667085 !important;
+}
+
+.admin-dark-app .dashboard-donut::before {
+  background: #ffffff !important;
+}
+
+@media (max-width: 980px) {
+  .dashboard-chart-grid,
+  .dashboard-donut-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-donut {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-chart-card {
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .dashboard-donut {
+    width: 150px;
+    height: 150px;
+  }
+
+  .dashboard-donut span {
+    font-size: 28px;
+  }
 }

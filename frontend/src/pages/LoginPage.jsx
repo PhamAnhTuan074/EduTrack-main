@@ -39,11 +39,11 @@ export default function LoginPage() {
 
   return (
     <main className="login-page">
-      <section className="login-shell" aria-label="Đăng nhập hệ thống quản lý cơ sở vật chất đa trường">
+      <section className="login-shell" aria-label="Đăng nhập hệ thống quản lý cơ sở vật chất">
         <aside className="login-brand-panel">
           <div className="login-logo" aria-label="Nền tảng quản lý cơ sở vật chất">
             <span>EduTrack</span>
-            <small>Multi-school facility platform</small>
+            <small>Facility management platform</small>
           </div>
 
           <div className="login-brand-copy">

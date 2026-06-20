@@ -11,7 +11,7 @@ const serviceItems = [
   },
   {
     title: "Theo dõi thiết bị",
-    body: "Quản lý máy chiếu, TV, điều hòa, máy tính, loa, bàn ghế và thiết bị khác theo từng phòng."
+    body: "Quản lý máy chiếu, màn hình hiển thị, điều hòa, máy tính, loa, bàn ghế và thiết bị khác theo từng phòng."
   },
   {
     title: "Báo hỏng và sửa chữa",
@@ -63,7 +63,7 @@ export default function PublicHomePage() {
       <section className="public-section public-split-section">
         <div>
           <p className="public-eyebrow">Phù hợp với đề tài quản lý</p>
-          <h2>Từ bài toán một trường sang nền tảng đa trường</h2>
+          <h2>Từ bài toán một trường sang nền tảng quản lý</h2>
           <p>
             Mỗi tổ chức có mã trường riêng, tài khoản admin riêng và vùng dữ liệu riêng.
             Admin có thể quản lý người dùng nội bộ, kỹ thuật viên xử lý sự cố, còn người báo hỏng tạo phiếu theo phòng.

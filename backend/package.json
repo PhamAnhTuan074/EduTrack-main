@@ -9,6 +9,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.js",
     "prisma:seed-extra": "node prisma/seed-extra.js",
+    "prisma:update-vietnamese-names": "node prisma/update-vietnamese-display-names.js",
     "security:check-sql": "node scripts/verify-no-unsafe-sql.js",
     "verify:advanced": "npm run security:check-sql && npx prisma validate"
   },

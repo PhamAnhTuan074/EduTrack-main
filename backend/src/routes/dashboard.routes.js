@@ -8,10 +8,31 @@ const router = express.Router();
 
 router.get("/stats", authenticate, authorize("ADMIN", "TECHNICIAN", "REPORTER"), async (req, res) => {
   try {
-    const [totalRooms, brokenDevices, pendingReports, brokenGroups] = await Promise.all([
+    const [
+      totalRooms,
+      totalDevices,
+      totalReports,
+      brokenDevices,
+      pendingReports,
+      deviceStatusGroups,
+      reportStatusGroups,
+      brokenGroups
+    ] = await Promise.all([
       prisma.room.count({ where: { organizationId: req.user.organizationId } }),
+      prisma.device.count({ where: { organizationId: req.user.organizationId } }),
+      prisma.damageReport.count({ where: { organizationId: req.user.organizationId } }),
       prisma.device.count({ where: { organizationId: req.user.organizationId, status: "BROKEN" } }),
       prisma.damageReport.count({ where: { organizationId: req.user.organizationId, status: "PENDING" } }),
+      prisma.device.groupBy({
+        by: ["status"],
+        where: { organizationId: req.user.organizationId },
+        _count: { id: true }
+      }),
+      prisma.damageReport.groupBy({
+        by: ["status"],
+        where: { organizationId: req.user.organizationId },
+        _count: { id: true }
+      }),
       prisma.device.groupBy({
         by: ["roomId"],
         where: { organizationId: req.user.organizationId, status: "BROKEN" },
@@ -46,10 +67,34 @@ router.get("/stats", authenticate, authorize("ADMIN", "TECHNICIAN", "REPORTER"),
       .sort((a, b) => b.brokenCount - a.brokenCount)
       .slice(0, 5);
 
+    const deviceStatusCounts = {
+      GOOD: 0,
+      BROKEN: 0,
+      REPAIRING: 0
+    };
+    deviceStatusGroups.forEach((item) => {
+      deviceStatusCounts[item.status] = item._count.id;
+    });
+
+    const reportStatusCounts = {
+      PENDING: 0,
+      IN_PROGRESS: 0,
+      COMPLETED: 0
+    };
+    reportStatusGroups.forEach((item) => {
+      reportStatusCounts[item.status] = item._count.id;
+    });
+
     return res.json({
       totalRooms,
+      totalDevices,
+      totalReports,
       brokenDevices,
       pendingReports,
+      inProgressReports: reportStatusCounts.IN_PROGRESS,
+      processedReports: reportStatusCounts.COMPLETED,
+      deviceStatusCounts,
+      reportStatusCounts,
       topBrokenRooms
     });
   } catch (error) {

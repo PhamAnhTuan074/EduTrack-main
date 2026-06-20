@@ -16,7 +16,7 @@ const emptyForm = {
 
 const deviceTypeLabels = {
   PROJECTOR: "Máy chiếu",
-  TV: "Tivi",
+  TV: "Màn hình",
   AIR_CONDITIONER: "Điều hòa",
   COMPUTER: "Máy tính",
   SPEAKER: "Loa",
@@ -228,7 +228,7 @@ export default function DevicesPage() {
             Loại thiết bị
             <select value={form.type} onChange={(e) => updateField("type", e.target.value)}>
               <option value="PROJECTOR">Máy chiếu</option>
-              <option value="TV">Tivi</option>
+              <option value="TV">Màn hình</option>
               <option value="AIR_CONDITIONER">Điều hòa</option>
               <option value="COMPUTER">Máy tính</option>
               <option value="SPEAKER">Loa</option>

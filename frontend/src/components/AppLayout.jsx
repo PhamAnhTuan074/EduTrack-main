@@ -90,7 +90,7 @@ export default function AppLayout({ active, title, subtitle, user, children }) {
           <img className="brand-icon" src="/logo_ptit.png" alt="EduTrack" />
           <div>
             <p>EduTrack</p>
-            <span>Nền tảng quản lý CSVC đa trường</span>
+            <span>Nền tảng quản lý CSVC</span>
           </div>
         </div>
 

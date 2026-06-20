@@ -3,7 +3,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: ttcs-postgres
+    container_name: edutrack-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: facility_management
@@ -20,9 +20,10 @@ services:
       retries: 10
 
   backend:
+    image: edutrack-backend:latest
     build:
       context: ./backend
-    container_name: ttcs-backend
+    container_name: edutrack-backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -37,11 +38,12 @@ services:
         condition: service_healthy
 
   frontend:
+    image: edutrack:latest
     build:
       context: ./frontend
       args:
         VITE_API_BASE_URL: /api
-    container_name: ttcs-frontend
+    container_name: edutrack
     restart: unless-stopped
     ports:
       - "3000:80"
@@ -49,8 +51,10 @@ services:
       - backend
 
   seed:
+    image: edutrack-seed:latest
     build:
       context: ./backend
+    container_name: edutrack-seed
     profiles:
       - seed
     environment:

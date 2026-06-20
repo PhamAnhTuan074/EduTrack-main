@@ -19,7 +19,7 @@ const emptyForm = {
 
 const deviceTypeLabels = {
   PROJECTOR: "Máy chiếu",
-  TV: "Tivi",
+  TV: "Màn hình",
   AIR_CONDITIONER: "Điều hòa",
   COMPUTER: "Máy tính",
   SPEAKER: "Loa",

@@ -291,7 +291,7 @@ async function addStandardClassroomDevices(organizationId, room, options = {}) {
     }),
     tv: await ensureDevice(organizationId, {
       code: `TV-${prefix}-01`,
-      name: names.tv || `Tivi ${room.code}`,
+      name: names.tv || `Màn hình hiển thị ${room.code}`,
       type: "TV",
       status: statuses.tv || "GOOD",
       importedAt,
@@ -360,7 +360,7 @@ async function addComputerLabDevices(organizationId, room, options = {}) {
   });
   devices.switch = await ensureDevice(organizationId, {
     code: `SW-${prefix}-01`,
-    name: `Switch mạng ${room.code}`,
+    name: `Bộ chuyển mạch mạng ${room.code}`,
     type: "OTHER",
     status: options.switchStatus || "GOOD",
     importedAt,
@@ -395,7 +395,7 @@ async function seedPtit(passwordHash) {
 
   const users = {
     admin: await ensureUser(organization.id, {
-      fullName: "Quản trị viên CSVC",
+      fullName: "Phạm Anh Tuấn",
       username: "admin",
       role: "ADMIN",
       email: "admin@ptit.edu.vn",
@@ -532,7 +532,8 @@ async function seedPtit(passwordHash) {
   });
   devices.P202 = await addStandardClassroomDevices(organization.id, rooms.P202, {
     importedAt: at("2026-02-02"),
-    statuses: { projector: "REPAIRING", speaker: "BROKEN" }
+    statuses: { projector: "REPAIRING", speaker: "BROKEN" },
+    names: { speaker: "Hệ thống loa trợ giảng Bluetooth P202" }
   });
   devices.P301 = await addStandardClassroomDevices(organization.id, rooms.P301, {
     importedAt: at("2026-02-15")
@@ -672,7 +673,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P101.id,
-    description: "Tivi P101 hiện sọc ngang và không nhận tín hiệu HDMI.",
+    description: "Màn hình hiển thị P101 hiện sọc ngang và không nhận tín hiệu HDMI.",
     status: "PENDING",
     deviceIds: [devices.P101.tv.id]
   }));
@@ -715,7 +716,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.P202.id,
-    description: "Loa trợ giảng P202 mất kết nối bluetooth liên tục.",
+    description: "Hệ thống loa trợ giảng P202 mất kết nối Bluetooth liên tục.",
     status: "PENDING",
     deviceIds: [devices.P202.speaker.id]
   }));
@@ -732,7 +733,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvMang.id,
     roomId: rooms.LAB02.id,
-    description: "Switch mạng LAB02 chập chờn, một dãy máy mất kết nối.",
+    description: "Bộ chuyển mạch mạng LAB02 chập chờn, một dãy máy mất kết nối.",
     status: "IN_PROGRESS",
     deviceIds: [devices.LAB02.switch.id]
   });
@@ -757,7 +758,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.gvMang.id,
     roomId: rooms["LAB-MANG"].id,
-    description: "Switch trung tâm LAB-MANG báo lỗi cổng uplink.",
+    description: "Bộ chuyển mạch trung tâm LAB-MANG báo lỗi cổng uplink.",
     status: "IN_PROGRESS",
     deviceIds: [devices["LAB-MANG"].switch.id]
   });
@@ -775,7 +776,7 @@ async function seedPtit(passwordHash) {
     organizationId: organization.id,
     reporterId: users.thuVien.id,
     roomId: rooms["LIB-01"].id,
-    description: "Máy chiếu phòng thư viện không nhận tín hiệu từ laptop.",
+    description: "Máy chiếu phòng thư viện không nhận tín hiệu từ máy tính xách tay.",
     status: "PENDING",
     deviceIds: [devices["LIB-01"].projector.id]
   }));
@@ -978,7 +979,7 @@ async function seedHou(passwordHash) {
   devices.MEDIA01 = {
     camera: await ensureDevice(organization.id, {
       code: "CAM-MEDIA01-01",
-      name: "Camera ghi hình MEDIA01",
+      name: "Máy quay ghi hình MEDIA01",
       type: "OTHER",
       status: "GOOD",
       importedAt: at("2026-03-01"),
@@ -1032,7 +1033,7 @@ async function seedHou(passwordHash) {
     organizationId: organization.id,
     reporterId: users.reporter.id,
     roomId: rooms.B201.id,
-    description: "Tivi B201 không nhận điều khiển và màn hình tối.",
+    description: "Màn hình hiển thị B201 không nhận điều khiển và bị tối.",
     status: "PENDING",
     deviceIds: [devices.B201.tv.id]
   });
